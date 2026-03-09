@@ -1,12 +1,14 @@
 \documentclass{FastFyp}
+\usepackage{booktabs}
+\usepackage{float}
 \begin{document}
-\newcommand{\supervisor}{SupervisorName}
+\newcommand{\supervisor}{Dr. Tahir Ejaz}
 \newcommand{\university}{National University of Computer and Emerging Sciences, Lahore}
-\newcommand{\fyptitle}{FYP Report Title}
+\newcommand{\fyptitle}{KisaanMadad: An Integrated Mobile Decision-Support System for Small-Scale Farmers in Punjab, Pakistan}
 \newcommand{\degree}{BS}
-\newcommand{\Studentone}{Name of Student 1     Roll No. 1    BS(CS/DS/SE)} 
-\newcommand{\Studenttwo}{Name of Student 2     Roll No. 2    BS(CS/DS/SE)}
-\newcommand{\Studentthree}{Name of Student 3     Roll No. 3    BS(CS/DS/SE)}
+\newcommand{\Studentone}{Zoraiz Anwar     22L-6998    BS(CS)}
+\newcommand{\Studenttwo}{Ali Anzal     22L-6994    BS(CS)}
+\newcommand{\Studentthree}{Naail Rayaan     22L-6755    BS(CS)}
 \date{\today}
 \renewcommand{\contentsname}{Table of Contents}
 
@@ -63,13 +65,28 @@ Signature: ..........................
 \section*{Author's Declaration}
 This states Authors’ declaration that the work presented in the report is their own, and has not been submitted/presented previously to any other institution or organization.
 \pagebreak
+% === ABSTRACT ===
 \section*{Abstract}
-An Abstract is a short summary of the work being reported. Three to five sentences describing the essence of the work. An abstract is a short, 50-125 words summary of a work. An Abstract should state your work's purpose, findings, and conclusion without commenting on or evaluating the work itself.  It should be only one paragraph. Put the abstract on a separate page that follows the title page.
-\pagebreak 
-
-\section*{Executive Summary}
-The executive summary should be one to two pages’ of an overview of the information contained in the FYP report.  It should give the reader an easy reference, in a very brief form, to the important information contained in the report and explained in more detail in the body of the report. People reading the report will use this section as a reference during presentations. 
+Small-scale farmers in Pakistan face a confluence of structural challenges that severely constrain agricultural productivity and household income: acute water scarcity, persistent crop price volatility, and the near-total absence of data-driven decision-support tools accessible at the farm level. This report presents KisaanMadad (``Farmer Help''), an integrated mobile decision-support system designed for resource-constrained smallholders in Punjab, Pakistan. The system unifies four functionally distinct modules within a single cross-platform application: a probabilistic price forecasting engine employing a CNN-LSTM hybrid architecture benchmarked against Prophet and ARIMA baselines; a multi-criteria crop recommendation module that synthesises real-time weather, market proximity, planting calendars, and water availability; an irrigation scheduling engine grounded in the FAO-56 Penman-Monteith method, computing reference evapotranspiration $ET_0$ and applying crop-specific coefficients $K_c$ to derive field-level water requirements; and a financial planning toolkit comprising loan calculators, revenue projections, and expense tracking. All modules draw on localised data sources --- Punjab mandi price records from PAMRA and AMIS alongside meteorological inputs from the NASA POWER API --- and are presented through an Urdu-first interface to serve farmers with limited digital literacy. Collectively, KisaanMadad is expected to reduce the information asymmetry experienced by smallholders, improve irrigation efficiency, and provide actionable forecasts that enable more profitable and climate-resilient farming decisions.
 \pagebreak
+% === END ABSTRACT ===
+
+% === EXECUTIVE SUMMARY ===
+\section*{Executive Summary}
+
+\paragraph{Background.}
+Agriculture underpins Pakistan's economy, contributing 23.54\% to gross domestic product and employing 37.4\% of the national labour force \cite{pakistan_economic_survey_2025}. Yet the sector operates under severe structural stress. Approximately 97\% of Pakistani farmers own fewer than 12.5 acres of land \cite{rana2025farmers}, placing them squarely in the smallholder category where exposure to market shocks is highest and access to formal advisory services is lowest. Water insecurity compounds this vulnerability: per capita availability has collapsed from 5,260~m\textsuperscript{3} in 1951 to 908~m\textsuperscript{3} in 2021 --- below the internationally recognised scarcity threshold of 1,000~m\textsuperscript{3} \cite{pcrwr2021water} --- while irrigation efficiency across the canal network remains below 40\%. Price volatility driven by macroeconomic instability and strong commodity spillover effects further erodes farm income. Despite these pressures, the existing Pakistani agri-technology landscape remains fragmented: applications address either price discovery or weather information in isolation, and no reviewed solution integrates financial planning tools alongside agronomic advisory functions.
+
+\paragraph{System Overview.}
+KisaanMadad is a cross-platform mobile application targeting wheat, cotton, and rice cultivation in Punjab, Pakistan. It consolidates four decision-support modules into a unified, Urdu-language interface designed for farmers with limited digital literacy. The Price Forecasting module delivers probabilistic commodity price predictions for major Punjab mandi markets. The Crop Recommendation module generates ranked planting suggestions by scoring candidate crops against current weather conditions, market access, seasonal calendars, and water availability. The Irrigation Scheduling module produces weekly irrigation schedules tailored to a farmer's location, crop growth stage, and prevailing meteorological conditions. Finally, the Financial Planning module provides loan repayment calculators, crop revenue projections, and seasonal expense trackers --- functionality absent from all competing applications reviewed during this study.
+
+\paragraph{Technical Approach.}
+The price forecasting engine is built on a CNN-LSTM hybrid architecture, which exploits convolutional layers for local temporal pattern extraction and long short-term memory layers for longer-range dependency modelling. The model is trained on daily wholesale price records sourced from PAMRA and AMIS spanning 2018--2023 and benchmarked against Prophet and ARIMA baselines \cite{menculini2021comparing}. Irrigation scheduling is grounded in the FAO-56 Penman-Monteith standard \cite{allen1998crop}, computing reference evapotranspiration $ET_0$ from NASA POWER API solar radiation, temperature, and precipitation data, then multiplying by the appropriate crop coefficient $K_c$ to yield crop evapotranspiration $ET_c = K_c \times ET_0$; a Hargreaves--Samani fallback is applied when complete radiation data are unavailable. Crop recommendation scoring combines these meteorological inputs with FAO crop calendar data and proximity weighting for nearby mandis. The financial module employs rule-based calculators parameterised from user-provided inputs and prevailing crop revenue models.
+
+\paragraph{Expected Outcomes and Novelty.}
+KisaanMadad is expected to provide smallholder farmers with actionable, localised intelligence that reduces reliance on informal intermediaries (arthi) and mitigates the information asymmetry that currently characterises the mandi system. By embedding scientifically grounded irrigation scheduling directly on a mobile handset, the system aims to meaningfully improve on-farm water-use efficiency in a country facing acute water scarcity. Five principal contributions distinguish this work from the existing literature and commercial landscape: (1) it constitutes the first integrated platform to combine price forecasting, crop recommendation, irrigation scheduling, and financial planning within a single Pakistani agri-application; (2) it delivers FAO-56 compliant $ET_0$ computation on a mobile device for resource-constrained farmers with limited connectivity; (3) it introduces financial planning tools demonstrably absent from all reviewed existing solutions; (4) all models are trained and evaluated on localised PAMRA/AMIS mandi data and NASA POWER meteorological feeds rather than global commodity indices; and (5) the application is built with an Urdu-first interface, prioritising accessibility for the low-literacy smallholder population it serves.
+\pagebreak
+% === END EXECUTIVE SUMMARY ===
 
 
 \pagestyle{fancy} %Aatira
@@ -85,231 +102,325 @@ The executive summary should be one to two pages’ of an overview of the inform
 \mainmatter
 
 
+% === CHAPTER 1: INTRODUCTION ===
 \chapter{Introduction}
-This chapter is mandatory. The introduction should contain a brief overview of the problem being addressed and the background information needed for the reader to understand the work being done and the reasoning behind it.  
-The last paragraph of the introduction chapter should contain an outline of the entire report.  Summarize each chapter in one line to make the last paragraph.
+
+Agriculture constitutes the backbone of Pakistan's economy, contributing 23.54\% to the national Gross Domestic Product (GDP) and employing 37.4\% of the country's total labour force \cite{pakistan_economic_survey_2025}. Despite this critical macroeconomic role, the sector is predominantly reliant on smallholder farmers, with 97\% of farmers owning less than 12.5 acres of land \cite{rana2025farmers}. These resource-constrained agriculturalists face profound systemic challenges that severely limit their productivity and profitability. Consequently, there remains a substantial yield gap of 40--60\% for major crops, such as wheat and sugarcane, when compared to the potential yields achieved in controlled research trials \cite{pbc2024agriculture}.
+
+A primary driver of this agricultural underperformance is the intensifying water crisis. Pakistan's per capita water availability has precipitously declined from 5,260~m\textsuperscript{3} in 1951 to a critically low 908~m\textsuperscript{3} in 2021, falling below the internationally recognised water scarcity threshold of 1,000~m\textsuperscript{3} \cite{pcrwr2021water}. Compounding this scarcity is an acute lack of water management; overall irrigation efficiency remains below 40\%, and canal conveyance losses are estimated to reach approximately 38\% \cite{pcrwr2021water}. Furthermore, farmers' livelihoods are continuously threatened by extreme price volatility in local wholesale agricultural markets (\textit{mandis}), a phenomenon deeply exacerbated by macroeconomic instability and strong spillover effects between core commodities like wheat and rice \cite{habib2021price}. 
+
+Although several agricultural technology solutions exist in the Pakistani market, they remain highly fragmented. Existing applications typically offer either weather forecasts or market prices in isolation, leaving a void for an integrated decision-support platform \cite{pasha2024agritech}. Most critically, none of the reviewed existing mobile solutions provide localised financial planning tools for smallholder farmers \cite{pasha2024agritech}. To address these pressing systemic issues, KisaanMadad is proposed as an integrated mobile decision-support system tailored for small-scale Pakistani farmers, aiming to bridge the information gap and promote sustainable, data-driven agricultural practices.
+
 \section{Purpose of this Document}
-\textbf{Specify the purpose of this Project.}
-The purpose of the document in an FYP report is to clearly and concisely state the main objective and goals of the project, as well as the research question(s) or hypothesis(es) being investigated. It should provide a brief overview of the background and context of the project, and explain why the research is important and relevant. The purpose of the document should be written in a way that is easy for the reader to understand, and should be included at the beginning of the report.\\ In addition to providing an overview of the project, the purpose of the document should also outline the specific objectives and goals of the research, such as what the project aims to achieve and what the research questions or hypotheses are. This will help the reader understand the scope of the project and what to expect from the report. It is also important to include a brief description of the methods and techniques used in the research, as well as any limitations or assumptions of the project. This will provide the reader with a clear understanding of how the research was conducted and what the results and conclusions are based on. Finally, it should be clear what the report is going to cover, what kind of information will be presented, and in what order.\\
-For Example, "The purpose of this document is to present the design, implementation, and evaluation of our Final Year Project (FYP) which aims to develop a web-based application for small businesses to manage their inventory and customer orders. The project will focus on creating a user-friendly interface and providing a seamless user experience. The goal of this research is to provide a Minimum Viable Product (MVP) that can be used by small businesses to improve their inventory management and customer order processing. The research question we aim to answer is: Can we develop a web-based application that can improve inventory management and customer order processing for small businesses? This report will present the methodology, design, implementation, testing, and evaluation of our project, as well as the limitations and future work."
+The purpose of this document is to present the comprehensive design, implementation, and evaluation of KisaanMadad. In the face of fragmented existing solutions, KisaanMadad consolidates multiple disparate agricultural data streams into a unified, user-centric platform tailored for the specific needs of resource-constrained farmers in Punjab, Pakistan. Thus, the primary research question addressed by this project is whether an integrated, mobile-based decision-support system can effectively deliver localised crop recommendations, precise irrigation scheduling, accurate market price forecasting, and crucial financial planning directly to smallholder farmers. To answer this, the document details the development of the system's four core modules: ML-based Price Forecasting, multi-criteria Crop Recommendation, FAO-56 compliant Irrigation Scheduling, and rule-based Financial Planning.
+
 \section{Intended Audience}
-Identifying and writing the intended audience for a Final Year Project (FYP) report is an important step in the writing process. The intended audience is the group of people for whom the report is written and who will primarily read and use the report. It is crucial to identify the intended audience early in the writing process as this will guide the report's style, tone, and level of detail.\\
-To identify the intended audience, consider the report's purpose, who will be using the report and for what purpose. For example, the intended audience for a FYP report in Computer Science may be a panel of professors who will be evaluating the project. In contrast, the intended audience for a FYP report in Business may be potential investors or clients.
+The primary intended audience for this document is the evaluation committee at the National University of Computer and Emerging Sciences (FAST-NUCES), Lahore, who will assess the technical rigour and academic contribution of the KisaanMadad Final Year Project. Additionally, the audience encompasses potential agricultural stakeholders, including government bodies like the Punjab Agriculture Marketing Regulatory Authority (PAMRA), non-governmental organisations, and agri-tech innovators. These entities will gain valuable insights into how integrating data-driven mobile technologies can empower small-scale farmers, optimise resource allocation, and enhance agricultural economic stability in Pakistan.
+
 \section{Definitions, Acronyms, and Abbreviations}
-List all important definitions, acronyms, and abbreviations used in this document. For example: 
-\textbf{SDG}: Sustainable Development Goal\\
-\textbf{FYP:} Final Year Project\\
-\textbf{MVP}: Minimum Viable Product\\
-\textbf{UI}: User Interface\\
-\textbf{UX}: User Experience\\
-\textbf{Agile}: Agile Development\\
-\textbf{SCRUM}: Scrum Development\\
-\textbf{REST}: Representational State Transfer\\
-\textbf{ORM}: Object-Relational Mapping\\
-\textbf{CRUD}: Create, Read, Update, Delete\\
-\textbf{API}: Application Programming Interface
+Definitions of key terms, along with the expansions of acronyms and abbreviations used throughout this report, are provided below.
+
+\subsection{Definitions}
+\begin{description}
+    \item[Mandi] A local wholesale agricultural market where crop trading and price determination occur.
+    \item[Arthi] A middleman or commission agent operating within the mandi system, often facilitating transactions between farmers and buyers.
+    \item[$ET_0$] Reference evapotranspiration, representing the environmental evaporative demand for a standard reference crop.
+    \item[$K_c$] Crop coefficient, a standard value representing the physiological characteristics of a specific crop used to determine crop evapotranspiration.
+    \item[FAO-56] The standard Penman-Monteith method for computing crop water requirements as outlined by the Food and Agriculture Organization \cite{allen1998crop}.
+    \item[DSS] Decision-Support System, an information system that supports business or organisational decision-making activities.
+    \item[Smallholder farmer] An agriculturalist owning or managing a small plot of land, typically less than 12.5 acres in the context of Pakistan, often constrained by limited resources.
+\end{description}
+
+\subsection{Acronyms and Abbreviations}
+\begin{description}
+    \item[PAMRA] Punjab Agriculture Marketing Regulatory Authority
+    \item[AMIS] Agriculture Marketing Information Service
+    \item[NASA POWER] NASA Prediction of Worldwide Energy Resources API
+    \item[CNN-LSTM] Convolutional Neural Network and Long Short-Term Memory hybrid
+    \item[FAO] Food and Agriculture Organization of the United Nations
+    \item[DSS] Decision-Support System
+    \item[FYP] Final Year Project
+    \item[SDG] Sustainable Development Goal
+\end{description}
+
 \section{Conclusion}
-The last paragraph of the introduction chapter should contain an outline of the entire report. Summarize each chapter in one line to make the last paragraph.
+To conclude, this chapter has provided a foundational understanding of the profound systemic challenges impeding Pakistan's agriculture sector, including severe water scarcity, widespread yield gaps, and significant market price volatility. The fragmented nature of current digital interventions necessitates the development of KisaanMadad, an integrated mobile decision-support system aimed at empowering smallholder farmers. The remaining document is structured to provide a comprehensive exploration of this proposed solution. Chapter 2 delves into an extensive literature review and analysis of related work. Chapter 3 discusses the system design and architecture of the proposed platform. Chapter 4 outlines the specific methodology employed for each of the four core modules. Chapter 5 details the technical implementation of the system. Chapter 6 presents the results and evaluation of the developed modules. Finally, Chapter 7 provides the conclusion and highlights avenues for future work.
+% === END CHAPTER 1: INTRODUCTION ===
 \chapter{Project Vision}
-For each related work provide a paragraph of introduction and at the end, a paragraph of conclusions. Give a page break after the chapter ends.  This chapter is mandatory.  
-Clearly specify the goals and objectives of the project along with the scope of the project. (You can make sub-heading of goals and objectives and the scope of the project).
+
 \section{Problem Domain Overview}
-Describe in full detail what your system does. This section can be further divided into sub-sections, but basically, a paragraph description of the system is required.
+Agriculture constitutes 23.54\% of Pakistan's GDP and employs over a third of its workforce \cite{pakistan_economic_survey_2025}. However, an estimated 97\% of all farmers in Pakistan own and cultivate less than 12.5 acres of land \cite{rana2025farmers}, dominating the sector with smallholder operations that lack access to modern tools and data-driven insights. This productivity deficit results in severe yield gaps of 40-60\% \cite{adb2021pakistan}. Our integrated mobile application centralises essential agricultural decision-making processes---from crop selection and irrigation scheduling to price forecasting and financial planning. By deploying these modules collectively, the system ensures more reliable, timely, and actionable intelligence for farmers, ultimately enhancing both individual profitability and broader regional food security.
+
 \section{Problem Statement}
-Provide the \textbf{problem} which you are trying to solve. 
+The problem at hand involves the persistent reliance of Pakistani smallholder farmers on fragmented, traditional heuristics rather than integrated, data-driven tools. This deficiency results in suboptimal agricultural decisions across crop rotation, water utilisation, and market timing. By developing a unified, Urdu-first mobile decision-support system, we aim to automate complex predictive models and deliver actionable insights, thereby mitigating risks and improving overall farm efficiency.
+
 \section{Problem Elaboration}
-Describe the problem in detail and the various sub-problems you would work on.
+The overarching problem is characterised by several critical sub-domains that severely limit agricultural productivity and profitability.
+
+\subsection{Market Information Asymmetry}
+Smallholders face extreme price volatility and lack direct access to forward-looking, real-time wholesale mandi prices. Existing applications fail to provide predictive insights using advanced machine learning models (e.g., CNN-LSTM) \cite{pide2022wheat}, leaving farmers vulnerable to exploitation by intermediaries \cite{habib2021price} and unable to optimally time their sales.
+
+\subsection{Irrigation Inefficiency}
+Pakistan faces a severe hydrological crisis \cite{pcrwr2021water}, yet agricultural water use remains highly inefficient due to a reliance on traditional flood irrigation that causes massive volumetric waste \cite{worldbank2023water}. There is a distinct absence of accessible mobile tools that utilise scientifically validated evapotranspiration models, such as the FAO-56 standard \cite{allen1998crop}, to guide precise and efficient watering schedules.
+
+\subsection{Fragmented Tools}
+Current digital agricultural interventions are heavily siloed, offering discrete services like basic weather or isolated tips rather than a holistic platform \cite{pasha2024agritech}. Furthermore, these tools often feature complex English interfaces, making them largely inaccessible to the vast majority of rural farmers who require intuitive, Urdu-first design to overcome digital literacy barriers \cite{fao2023dss}.
+
+\subsection{Financial Exclusion}
+Smallholder farmers suffer from pervasive financial exclusion and a lack of formal planning capacity \cite{sbp2024finance}. The conspicuous absence of comprehensive financial modules in existing agri-tech applications heavily forces farmers to make critical livelihood decisions based purely on intuition rather than mathematically projected revenues, tracking inputs, and managing expenses.
+
 \section{Goals and Objectives}
-Write goals and objectives here.
+The goals and objectives of this project, addressing the lack of integrated decision-support for farmers, are as follows:
+\begin{enumerate}
+    \item Develop a probabilistic machine learning pipeline, benchmarking CNN-LSTM against baseline models \cite{menculini2021comparing}, to accurately forecast mandi crop prices.
+    \item Implement a multi-criteria scoring algorithm for automated, localized crop recommendation.
+    \item Design an irrigation scheduling module based on the FAO-56 Penman-Monteith standard for optimal water management.
+    \item Engineer a comprehensive financial planning module for revenue projection and expense tracking.
+    \item Deploy the system as an accessible, native Urdu-first mobile application.
+\end{enumerate}
+
 \section{Project Scope}
-Specify the scope of your project here.\\
-For example, The scope of this project is to design and develop a web-based application for small businesses to manage their inventory and customer orders. The application will allow small businesses to:
-\begin{itemize}
-    \item Create, read, update, and delete inventory items
-   \item Create, read, update, and delete customer orders
-   \item Generate reports on inventory levels and customer orders
-   \item Send notifications to customers about their orders
-   \item Provide an easy-to-use user interface and a seamless user experience
-\end{itemize}
-The project will be developed using a combination of HTML, CSS, JavaScript, and a web-development framework such as React.js or Angular.js. The application will use a RESTful API to communicate with a back-end database, which will be implemented using a ORM library. The project will be developed using Agile development principles, and project management will be done using SCRUM.\\
-The project deliverables will include:
-\begin{itemize}
- \item A functional web-based application for small businesses to manage their inventory and customer orders
- \item A user manual for the application
- \item A documentation of the design, implementation, and testing process
- \end{itemize}
-The project scope does not include the following:
-\begin{itemize}
- \item  Providing hosting or server infrastructure for the application
- \item Developing mobile applications (iOS or Android)
- \item  Integrating the application with third-party services or APIs
- \end{itemize}
-This project scope will be used as a guide throughout the development
-\section{Sustainable Development Goal (SDG)}
-Identify at least one SDG area that you are targeting in this project. This has to be documented as a paragraph. The complete SDG list is shown in Figure \ref{fig:my_label}.
-\begin{figure} [!h]
-    \centering
-\includegraphics[width=0.8\textwidth]{Figures/Picture1}
-    \caption{This figure represents all the SDGs that can be targets of an FYP; Adding this sub-caption is mandatory; make sure you describe the picture in a way that if a visually impaired person is reading using a text reader, they can understand whats in this picture.}
-    \label{fig:1}
+The project encompasses two distinct phases: the research phase and the development phase. The research phase involves a comprehensive literature review to gather insights on existing agricultural DSS, predictive modeling, and water management strategies. Additionally, it involves identifying reliable open-source data repositories, such as AMIS, PAMRA, and NASA POWER, that will serve as foundational inputs for our system.
+
+The development phase focuses on creating the KisaanMadad platform, scoped geographically to Punjab, Pakistan, for wheat, cotton, and rice. The software encompasses four integrated modules: ML-based price forecasting, multi-criteria crop recommendation, FAO-56 compliant irrigation scheduling, and offline-capable financial calculators. The final deliverable is an Urdu-supported mobile application. Real-time physical IoT sensors, computer vision disease detection, and direct micro-lending integrations are strictly excluded from this scope.
+
+\section{Sustainable Development Goals}
+In this project, we are focusing on two specific SDGs: Zero Hunger, and Industry, Innovation, and Infrastructure.
+
+\subsection{SDG 2: Zero Hunger}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\linewidth]{Figures/sdg_2.png}
+  \caption{United Nations Sustainable Development Goal 2: Zero Hunger.}
+  \label{fig:sdg_2}
 \end{figure}
-\section{Constraints}
-\section{Business Opportunity}
-\section{Stakeholders Description/ User Characteristics}
-Identify and briefly describe who the users of this system will be, and their roles.
-\subsection{Stakeholders Summary}
-\subsection{Key High-Level Goals and Problems of Stakeholders}
-Notice how a section’s heading is changed to “heading 1”.  It will show up in the table of contents as a section under a chapter.  Notice its numbering also. Similarly, subsections can have heading 2 and heading 3 styles.\\
-\textcolor{red}{NOTE: Subsections from 2.7 to 2.9 are optional for Research projects but compulsory for Development projects.}
+
+The first SDG is Zero Hunger. By actively providing vulnerable rural farmers with transparent data-driven crop recommendations and sophisticated forward-looking price forecasts, the integrated system directly addresses foundational knowledge gaps. This project supports the goal of doubling the agricultural productivity and baseline incomes of small-scale food producers \cite{un2030agenda}, promoting resilient practices that adapt to climate change.
+
+\subsection{SDG 9: Industry, Innovation, and Infrastructure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.4\linewidth]{Figures/sdg_9.png}
+  \caption{United Nations Sustainable Development Goal 9: Industry, Innovation, and Infrastructure.}
+  \label{fig:sdg_9}
+\end{figure}
+
+The second SDG we address is Industry, Innovation, and Infrastructure. Our solution leverages innovative computational models---like CNN-LSTM forecasts and FAO-56 calculations \cite{allen1998crop}---and translates them into a highly accessible mobile interface. By doing so, we contribute to upgrading the fundamental technological capabilities of the agricultural sector, bridging the digital divide for rural workers without demanding prohibitive infrastructure investments \cite{un2030agenda}.
+
+\section{Conclusion}
+To conclude, this chapter establishes the foundational project vision by contextualising the profound challenges faced by smallholder farmers in Pakistan, including market volatility, water scarcity, and fragmented tools. By clearly articulating an unambiguous problem statement, identifying highly specific objectives, and formally defining the project scope, the chapter demonstrates how an integrated decision-support system can simultaneously advance critical UN Sustainable Development Goals and empower end-users. This sets the stage for a comprehensive exploration of our multifaceted approach in subsequent chapters.
 
 \chapter{Literature Review / Related Work}
-For each related work, provide a paragraph of introduction and, at the end, a paragraph of conclusions. Give a page break after the chapter ends. \textcolor{red}{This chapter is mandatory.}
-\section{Definitions, Acronyms, and Abbreviations}
-\section{Detailed Literature Review} 
-This section will include a detailed literature review of your problem area. Make different categories for different types of work done in the past.  In addition to textual descriptions, make a summary table that describes each paper that you have read, along with references.
-\subsection{Related Research Work 1 / Related Development Project (Please make sure to add an appropriate heading here and not keep this same heading, this is your info only.)}
-\begin{itemize}
-    \item Summary of the research item / Development Project (1 or 2 paragraphs)
-  \item  Critical analysis of the research item / Development Project (Strengths and Weaknesses) 1 paragraph
-  \item  Relationship to the proposed work - 1 paragraph
-\end{itemize}
 
- \subsection{Example LR 1: for Development Project}
-The project ABC \cite{ref:guyon:2007a} focused on building a real-time customer service dashboard designed to streamline query management and improve response efficiency within a mid-sized software firm. The system was developed using a modular architecture, integrating ticket tracking, live chat support, and performance analytics into a single interface. Built with React for the frontend and Node.js for the backend, the dashboard also featured role-based access control and SLA monitoring tools. During testing, the dashboard demonstrated a 35\% reduction in query resolution time and improved internal coordination between support agents and technical teams. The project was deployed in phases, starting with internal use and later expanding to client-facing support channels.
+\section{Definitions, Acronyms and Abbreviations}
 
-One of the key strengths of this development effort was its adaptability to existing workflows. The dashboard was designed to integrate seamlessly with the company’s CRM and internal communication tools, minimizing disruption during rollout. Its real-time analytics allowed supervisors to monitor agent performance and customer satisfaction trends. However, the project faced limitations in scalability during peak traffic hours, and the initial version lacked multilingual support, which restricted its usability for international clients. These issues were partially addressed in later iterations but remain areas for future enhancement.
+\subsection{Definitions}
+\begin{description}
+    \item[Evapotranspiration] The combined process of water loss from the earth's surface into the atmosphere through evaporation from soil and transpiration from plants.
+    \item[Reference Evapotranspiration ($ET_0$)] The evapotranspiration rate from a well-watered reference surface, typically an extensive surface of green grass of uniform height.
+    \item[Crop Coefficient ($K_c$)] A dimensionless ratio that relates the reference evapotranspiration to the actual crop evapotranspiration under standard conditions.
+    \item[Mandi] A local or regional wholesale agricultural market where farmers sell their produce to commission agents or buyers.
+    \item[Time Series Forecasting] The use of mathematical and statistical models to predict future values based on previously observed, chronologically ordered data.
+    \item[Multi-Criteria Decision Making (MCDM)] A sub-discipline of operations research that explicitly evaluates multiple, often conflicting, criteria in decision making.
+    \item[Soil Moisture] The quantity of water contained in the soil matrix, which is a critical variable for determining irrigation triggers.
+    \item[Precision Agriculture] A farming management concept based on observing, measuring, and responding to inter- and intra-field variability in crops.
+    \item[Vernacular Interface] A user interface localized into a native or indigenous language, tailored directly to users who do not speak English.
+\end{description}
 
-This development project directly supports the proposed research by providing a practical foundation for evaluating customer service efficiency. While the research explores theoretical models and AI integration, the dashboard serves as a tangible implementation that can be enhanced with AI-driven features such as automated query routing and sentiment analysis. The performance metrics gathered during this project will inform the research’s evaluation framework and help validate proposed improvements in service delivery and operational management.
+\subsection{Acronyms and Abbreviations}
+\begin{description}
+    \item[ANN] Artificial Neural Network
+    \item[ARIMA] AutoRegressive Integrated Moving Average
+    \item[CNN] Convolutional Neural Network
+    \item[DSS] Decision Support System
+    \item[ET\textsubscript{0}] Reference Evapotranspiration
+    \item[FAO] Food and Agriculture Organization
+    \item[GIS] Geographic Information System
+    \item[LSTM] Long Short-Term Memory
+    \item[MAE] Mean Absolute Error
+    \item[MAPE] Mean Absolute Percentage Error
+    \item[MCDM] Multi-Criteria Decision Making
+    \item[ML] Machine Learning
+    \item[NASA POWER] NASA Prediction of Worldwide Energy Resources
+    \item[PAMRA] Punjab Agriculture Marketing Regulatory Authority
+    \item[RMSE] Root Mean Square Error
+    \item[UI] User Interface
+    \item[UX] User Experience
+\end{description}
 
- \subsection{Example LR 2: for Research and Development Project}
-Smith et al. \cite{ref:Bishop:2006} investigated the integration of AI-powered chatbots within corporate customer service frameworks, focusing on automating Tier-1 support queries. Their study involved deploying a Natural Language Processing (NLP) based chatbot across three multinational firms and evaluating its performance over a six-month period. The results demonstrated a 40\% reduction in average response time and a 25\% increase in customer satisfaction ratings. The chatbot was trained using historical customer interaction logs and was integrated with existing CRM systems to ensure contextual accuracy and personalized responses. Additionally, the study emphasized the scalability of chatbot systems, noting their ability to handle thousands of simultaneous queries without compromising quality, especially during peak service hours when traditional support teams struggled to maintain SLA compliance.
+\section{Detailed Literature Review}
 
-One of the strengths of this research lies in its empirical approach, offering quantifiable improvements in service metrics. The integration with CRM systems added depth to the chatbot’s responses, enhancing the overall customer experience. However, the study’s limitations include its narrow focus on Tier-1 queries, with minimal exploration of escalation protocols or emotional intelligence in handling sensitive customer issues. It also lacks discussion on the long-term adaptability of the chatbot to evolving customer expectations and organizational changes.
+\subsection{Agricultural Price Forecasting}
 
-This research is directly relevant to the proposed work, which aims to develop a hybrid customer service model that combines AI efficiency with human oversight. While they focused primarily on automation, the proposed work seeks to extend their framework by incorporating feedback loops, escalation mechanisms, and sentiment analysis to handle more complex queries. The foundational insights from this study will inform the design and evaluation metrics of the proposed system, particularly in terms of response time, customer satisfaction, and operational scalability.
+\subsubsection{Summary of the research items}
+Menculini et al. \cite{menculini2021comparing} propose comparing deep learning methods such as Prophet alongside traditional ARIMA architectures for forecasting wholesale food prices. Using a large dataset of regional wholesale market prices, the study demonstrates that deep learning significantly outperforms classical statistical techniques, achieving lower error rates across different food commodity models.
 
-\section{Literature Review Summary Table}
-Please provide a compact summary of your literature review as provided in the table \ref{tab:1}, for the development project.
-\begin{table}[!h]
-\centering
-\caption{This summary Table is for a development project, and you must identify each column clearly. Must need at least 15 relevant studies}
-\begin{tabular}{|p{2.5cm}|p{2.5cm}|p{4cm}|p{5cm}|}
-\hline
-    \textbf{Application} & \textbf{Features} & \textbf{Relevance} & \textbf{Limitations} \\
-\hline
-Rapid Miner \cite{ref:Duda:2000} & User interface design & Provides information on user requirements and design considerations & Limited sample size and geographic diversity of participants \\
-\hline
-TensorFlow \cite{ref:SVMGuide} & Competitive analysis & Identifies potential competitors and opportunities for differentiation & Limited to apps in the same category and not considering other possible alternatives \\
-\hline
-Abc Keras \cite{ref:guyon:2007} & Technical infrastructure & Helps to identify and plan for necessary technical resources and infrastructure & Assumes all requirements are known and does not evaluate the possibility of new requirements emerging in the future \\
-\hline
-Abc Xyz \cite{ref:guyon:2007a} & User experience testing & Provides feedback on user experience and identifies areas for improvement & Limited sample size and testing environment not fully representative of real-world conditions \\
-\hline
-\end{tabular}
-\label{tab:1}
+In \cite{murugesan2022forecasting}, Murugesan and Mishra evaluate various deep learning architectures, including basic LSTM, bi-LSTM, stacked LSTM, and CNN-LSTM configurations, for predicting agricultural commodity prices. By extracting temporal sequences and spatial patterns, this study demonstrates that CNN-LSTM hybrids offer a highly accurate forecasting mechanism, outperforming basic recurrent neural networks in complex market scenarios.
+
+The study by Joshi and Patel \cite{joshi2022cnn} utilized a CNN-Bidirectional LSTM approach specifically applied to price forecasting of volatile agricultural commodities in Gujarat. The bidirectional model effectively learned complex non-linear trading patterns, confirming the suitability of deep sequential models to capture both forward and backward temporal dependencies in local agriculture markets.
+
+Finally, Habib et al. \cite{habib2021impact} analyses the impact of price volatility on agricultural commodities versus general food items with a specific focus on Pakistan. Utilizing localized economic datasets alongside historical prices, the authors demonstrate how macroeconomic instability and international commodity trends compound short-term price fluctuations. Their baseline findings underscore the necessity for robust, localized predictive tools to mitigate these shocks.
+
+\subsubsection{Critical analysis of the research items}
+The comparative study by Menculini et al. \cite{menculini2021comparing} successfully establishes the supremacy of deep learning over ARIMA; however, its reliance on stable European datasets limits its direct generalisability to highly erratic markets like Pakistan's mandi system. The deep learning models evaluated by Murugesan and Mishra \cite{murugesan2022forecasting} are notably powerful, yet complex architectures such as CNN-LSTM run the risk of overfitting when applied to data-scarce environments. The bidirectional approach from Joshi and Patel \cite{joshi2022cnn} handles long-term dependencies gracefully but lacks robust handling of exogenous variables, such as sudden policy shifts or extreme weather shocks, which regularly distort agricultural pricing. Meanwhile, Habib et al. \cite{habib2021impact} correctly identifies structural volatility issues in Pakistan's agriculture sector, but it remains heavily diagnostic rather than predictive, offering no implementable machine learning framework for regional stakeholders.
+
+\subsubsection{Relationship to the proposed research work}
+The CNN-LSTM architecture evaluated positively by Murugesan and Mishra \cite{murugesan2022forecasting} translates to the baseline design for KisaanMadad's price forecasting module, effectively balancing spatial feature extraction with time-series memory similar to the approach by Joshi and Patel \cite{joshi2022cnn}. To address the localized volatility highlighted by Habib et al. \cite{habib2021impact}, the module will rely on PAMRA and AMIS daily mandi price datasets spanning 2018--2023, rather than abstract global commodity curves. This bridges the gap between state-of-the-art deep learning findings and the resource-constrained needs of smallholder farmers in Pakistan's localized supply chains.
+
+\subsubsection{Literature review summary table}
+\begin{table}[htbp]
+  \centering
+  \caption{Literature review summary table for Agricultural Price Forecasting}
+  \label{tab:price_forecasting}
+  \begin{tabular}{p{0.15\linewidth} p{0.25\linewidth} p{0.25\linewidth} p{0.25\linewidth}}
+    \toprule
+    \textbf{Authors} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
+    \midrule
+    Murugesan \& Mishra \cite{murugesan2022forecasting} & CNN-LSTM and LSTM variants & Superiority of CNN-LSTM architectures & High computational cost, data heavy \\
+    Joshi \& Patel \cite{joshi2022cnn} & CNN-Bidirectional LSTM & Accurate regional forecasting in Gujarat & Ignores exogenous market shocks \\
+    Menculini et al. \cite{menculini2021comparing} & Prophet, Deep, ARIMA & Prophet and DL outperformed ARIMA & Tested on stable European datasets \\
+    Habib et al. \cite{habib2021impact} & Economic Analysis & Identified severe structural price volatility & Diagnostic only, no predictive application \\
+    \bottomrule
+  \end{tabular}
 \end{table}
-The Table above explains a way to present your literature review for development projects. If you have a research project, the summary should be written in the below table \ref{tab:2} format.
-\begin{table}[!h]
-\caption{This summary Table is for a research project, and you must identify each column clearly. Must need at least 15 relevant studies}
-\centering
-\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3cm}|}
-\hline
-\textbf{Author} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
-\hline
-Smith et al. \cite{ref:Bishop:2006}& Case study with a sample size of 50 & Positive effects of XYZ on ABC, 93.74\% accuracy & Small sample size \\
-\hline
-Johnson et al. \cite{ref:Duda:2000} & Literature review utilizing keyword-based search & A comprehensive overview of XYZ in the field of DEF, 12.8\% precision & Limited to specific subfield \\
-\hline
-Williams et al. \cite{ref:IJCNNChallenge:2007} & Survey of 1000 participants using a structured questionnaire & Strong correlation between XYZ and GHI, R-squared = 0.72 & Self-reported data \\
-\hline
-Jones et al. \cite{ref:SVMGuide} & Experimental design with 100 participants, Utilized SVM with the combination of PCA & XYZ significantly improves JKL in certain populations, AUC = 0.86 & Limited generalizability \\
-\hline
-\end{tabular}
-\label{tab:2}
+
+\subsection{Crop Recommendation Systems}
+
+\subsubsection{Summary of the research items}
+Raghavendra et al. \cite{raghavendra2024systematic} present an extensive systematic literature review of machine learning algorithms utilized strictly for crop recommendation and yield estimation. Evaluating a consolidated body of work, the study demonstrates that ensemble methods and deep learning models consistently outperform traditional ML approaches when trained on diverse soil and atmospheric inputs.
+
+In \cite{priyanka2023iot}, Priyanka et al. present an IoT-based crop recommendation framework using a machine learning backend for smart agriculture. Using sensory data measuring temperature and moisture, this study maps real-time environmental data to crop viability, demonstrating early success in automating recommendations dynamically.
+
+Kancharagunta et al. \cite{kancharagunta2024crop} survey crop suitability systems by combining diverse IoT inputs with machine learning models. The survey highlights robust methodologies that integrate continuous environmental parameters into algorithmic decisions, successfully aiding both yield prediction and agricultural scheduling.
+
+Finally, Apat et al. \cite{apat2023artificial} focuses specifically on artificial intelligence-based frameworks for crop guidance, proposing a lightweight intelligent recommendation system. By classifying secondary datasets encompassing soil and water availability features, the proposed system proves highly capable for farmers lacking expensive localized hardware.
+
+\subsubsection{Critical analysis of the research items}
+While Raghavendra et al. \cite{raghavendra2024systematic} provides an excellent foundational synthesis of machine learning in agriculture, the aggregated literature flattens regional heterogeneities, making perfect accuracy difficult to replicate in real-world scenarios. The IoT-driven architecture by Priyanka et al. \cite{priyanka2023iot} succeeds functionally but remains entirely cost-prohibitive for the mass majority of farmers owning under 12.5 acres. The survey approach by Kancharagunta et al. \cite{kancharagunta2024crop} confirms these hardware-adoption barriers. Conversely, the methodology by Apat et al. \cite{apat2023artificial} is a contextually robust software-only approach, yet its reliance on secondary static traces typically limits its predictive power against volatile precipitation cycles and climate changes.
+
+\subsubsection{Relationship to the proposed research work}
+KisaanMadad's crop recommendation system builds upon the software-centric philosophy presented by Apat et al. \cite{apat2023artificial} while aiming for the robust accuracy highlighted by Raghavendra et al. \cite{raghavendra2024systematic}. To overcome the lack of IoT hardware noted as a vulnerability by Priyanka et al. \cite{priyanka2023iot} and Kancharagunta et al. \cite{kancharagunta2024crop}, KisaanMadad will integrate dynamic, real-time meteorological inputs via the NASA POWER API alongside FAO crop calendars. By weighing continuous remote variables against static local criteria, KisaanMadad proposes an accurate recommendation system directly tailored to small-scale growers in Punjab.
+
+\subsubsection{Literature review summary table}
+\begin{table}[htbp]
+  \centering
+  \caption{Literature review summary table for Crop Recommendation Systems}
+  \label{tab:crop_recommendation}
+  \begin{tabular}{p{0.15\linewidth} p{0.25\linewidth} p{0.25\linewidth} p{0.25\linewidth}}
+    \toprule
+    \textbf{Authors} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
+    \midrule
+    Priyanka et al. \cite{priyanka2023iot} & IoT-based ML classification & High dynamic accuracy & Hardware-dependent, cost-prohibitive for smallholders \\
+    Apat et al. \cite{apat2023artificial} & AI modeling on secondary data & Highly viable crop mapping & Relies heavily on static or prior weather traces \\
+    Kancharagunta et al. \cite{kancharagunta2024crop} & Survey of ML/IoT systems & Synthesis of precision agritech adoption & Implementation complexity highlighted in survey \\
+    Raghavendra et al. \cite{raghavendra2024systematic} & Systematic literature review & Identified optimal ensemble models & Generalised findings ignore regional variances \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
-\section{Conclusion}
-Write the conclusion of the literature review. 
-The columns in the table depending upon your problem and should be specific to your project as described in \ref{tab:1}, \ref{tab:2}, respectively. Proper citations and references are necessary. The template has already an integrated IEEE references format. Go to Google scholar, copy the bib text of your reference, and paste the reference into the fypbib.bib file. Then all you have to do is use \cite{ref:Bishop:2006}.\\ \textcolor{red}{\textbf{NOTE: For development projects, describe related or similar work done by other teams and details of their methods/algorithms. For a research project, a detailed literature survey is expected.}}
+\subsection{FAO-56 Irrigation Scheduling and ET\textsubscript{0} Estimation}
+
+\subsubsection{Summary of the research items}
+The foundational work by Allen et al. \cite{allen1998crop} establishes the global standard for computing crop water requirements via the FAO-56 Penman-Monteith method. This exhaustive procedural framework uses defined crop coefficients ($K_c$) and standard meteorological variables to produce the definitive reference evapotranspiration ($ET_0$) metric used globally.
+
+In \cite{harris2025energy}, Harris proposes an energy-efficient smart irrigation framework combining edge AI with forecast-driven scheduling. By processing atmospheric variables against datasets like FAO and NASA POWER, the system efficiently minimized irrigation errors and operational costs through anticipatory remote sensing.
+
+A study by Baber and Ullah \cite{baber2024short} evaluates the temperature-based Hargreaves-Samani equation against the standard FAO-56 Penman-Monteith equation for $ET_0$ estimation strictly within Pakistan. Using regional observatory data, this study demonstrates that while the PM method holds theoretical supremacy, the calibrated Hargreaves-Samani model is exceptionally suitable and accurate for data-scarce Pakistani regions.
+
+Lastly, Jaafar et al. \cite{jaafar2022agsat} proposes AgSAT, a smart irrigation application reliant on cloud-fetched NASA POWER data combined with satellite imagery. By directly calculating daily crop ET and water requirements via remote methodologies, the authors demonstrate robust irrigation scheduling capabilities without physical ground equipment.
+
+\subsubsection{Critical analysis of the research items}
+The canonical methodology provided by Allen et al. \cite{allen1998crop} remains technically unmatched, yet its rigid demand for numerous meteorological variables makes it exceptionally difficult to directly deploy in sensor-less regions. The edge AI approach by Harris \cite{harris2025energy} brings powerful computation directly to farms but necessitates localized hardware or continuous connectivity. The regional evaluation by Baber and Ullah \cite{baber2024short} highlights a crucial compromise: the Hargreaves equation is simpler, but without proper calibration coefficients, farmers risk wasteful over-irrigation. The utilization of NASA POWER datasets by mobile applications like the one developed by Jaafar et al. \cite{jaafar2022agsat} presents an optimal software pathway, though resolution constraints inevitably restrict effectiveness on extreme micro-topographies.
+
+\subsubsection{Relationship to the proposed research work}
+Following the data sourcing successes of Harris \cite{harris2025energy} and Jaafar et al. \cite{jaafar2022agsat}, KisaanMadad bypasses physical hardware constraints by querying the NASA POWER API for real-time solar radiation and temperature. This remote data populates the core FAO-56 Penman-Monteith engine \cite{allen1998crop} compiled within the application. When wind speed or relative humidity inputs fail, KisaanMadad falls back to the temperature-driven Hargreaves methodology verified for use in local contexts by Baber and Ullah \cite{baber2024short}, guaranteeing uninterrupted irrigation scheduling.
+
+\subsubsection{Literature review summary table}
+\begin{table}[htbp]
+  \centering
+  \caption{Literature review summary table for FAO-56 Irrigation Scheduling}
+  \label{tab:irrigation}
+  \begin{tabular}{p{0.15\linewidth} p{0.25\linewidth} p{0.25\linewidth} p{0.25\linewidth}}
+    \toprule
+    \textbf{Authors} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
+    \midrule
+    Harris \cite{harris2025energy} & Edge AI and NASA POWER & Minimized energy load and water use & Requires continuous edge/cloud connectivity \\
+    Baber \& Ullah \cite{baber2024short} & Penman-Monteith vs Hargreaves & Verified Hargreaves-Samani suitability & Calibration issues without proper coefficient setup \\
+    Jaafar et al. \cite{jaafar2022agsat} & NASA POWER \& Satellite apps & Strong field-scale ET metrics & Satellite resolutions may overlook micro-climates \\
+    Allen et al. \cite{allen1998crop} & FAO-56 foundational standard & Global ET0 benchmark established & Requires extensive meteorological input variables \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Agricultural Mobile Applications in Developing Countries}
+
+\subsubsection{Summary of the research items}
+Kamal and Bablu \cite{kamal2023mobile} propose a systematic review regarding the widespread adoption of mobile applications by smallholder farmers operating in developing nations. Their analysis highlights how applications empowering farmers can accelerate agricultural development, provided digital payment systems and information delivery align with ground truths.
+
+In \cite{amina2025factors}, Amina et al. specifically evaluate the factors influencing farmers' satisfaction and adoption of mobile phone applications for agricultural purposes within Faisalabad, Pakistan. The study found that usability and reliability directly determine satisfaction, pushing young farmers to optimize operations through reliable, well-designed mobile interfaces.
+
+The investigation by Shahzad et al. \cite{shahzad2024mobile} examines digital agriculture adoption across Punjab, Pakistan, assessing the role of perceived awareness on farmer decisions. Utilizing a large random sample from diverse agroecological zones, the study proves that localized, culturally coherent outreach dramatically enhances platform adoption and overall digital proficiency.
+
+Finally, examining existing Pakistani platforms, the Pasha \cite{pasha2024agritech} sector industry report reviews the state of agricultural tech solutions. The findings emphasize the systemic problem of fragmented single-utility tools, illustrating a severe market need for unified applications capable of managing multiple farming workflows simultaneously.
+
+\subsubsection{Critical analysis of the research items}
+The review by Kamal and Bablu \cite{kamal2023mobile} comprehensively diagnoses the positive macro-impacts but leaves technical implementation details, like offline caching or UI constraints, unaddressed. The regional usability analysis by Amina et al. \cite{amina2025factors} correctly identifies young farmers as the initial adoption catalyst in Pakistan, but overlooks the usability constraints faced by aging or low-literacy demographics. The Punjab-centric study by Shahzad et al. \cite{shahzad2024mobile} provides localized adoption data entirely relevant to KisaanMadad, yet highlights awareness, rather than purely technical features, as the core issue. Furthermore, the Pasha \cite{pasha2024agritech} sector report critically highlights app fragmentation, emphasizing that single-feature platforms fail to retain user interest without a comprehensive ecosystem backend.
+
+\subsubsection{Relationship to the proposed research work}
+Addressing the exact usability hurdles documented by Amina et al. \cite{amina2025factors} and the necessity of targeted local demographic awareness proven by Shahzad et al. \cite{shahzad2024mobile}, KisaanMadad is natively engineered with a vernacular Urdu User Interface utilizing accessible, heavily iconized navigational paradigms. Responding directly to the crippling fragmentation decried by the Pasha \cite{pasha2024agritech} report and following the empowerment guidelines set by Kamal and Bablu \cite{kamal2023mobile}, KisaanMadad consolidates price forecasting, crop recommendation, irrigation scheduling, and financial planning into one unified platform, representing a holistic, unprecedented counter to the limitations of current rural deployments.
+
+\subsubsection{Literature review summary table}
+\begin{table}[htbp]
+  \centering
+  \caption{Literature review summary table for Agricultural Mobile Applications}
+  \label{tab:mobile_apps}
+  \begin{tabular}{p{0.15\linewidth} p{0.25\linewidth} p{0.25\linewidth} p{0.25\linewidth}}
+    \toprule
+    \textbf{Authors} & \textbf{Method} & \textbf{Results} & \textbf{Limitations} \\
+    \midrule
+    Kamal \& Bablu \cite{kamal2023mobile} & Review of agricultural dev apps & Proven tech empowerment linkages & Diagnoses macro trends without UI technical guidance \\
+    Amina et al. \cite{amina2025factors} & Faisalabad adoption survey & Identified reliability as key driver & Predominantly evaluates younger demographics \\
+    Shahzad et al. \cite{shahzad2024mobile} & Punjab field adoption stats & Strong correlation with local awareness & Awareness-centric, lacks focus on app mechanics \\
+    Pasha \cite{pasha2024agritech} & Industry sector reporting & Identified severe app fragmentation & Enterprise focus, no underlying predictive models \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Related Applications}
+
+\subsubsection{Summary of the research items}
+The Kisan App \cite{kisanapp2024} is an established digital advisory platform targeting farmers primarily within Punjab, Pakistan. It focuses heavily on static farming methodologies, regional news alerts, and general weather reporting. It boasts a large user base due to widespread government and telco collaboration, effectively serving as an elementary portal for regional agricultural information.
+
+Farmdar \cite{farmdar2024} is an established agritech business offering a suite of B2B products (such as CropScan and Yield Pro) rather than a single farmer-facing application. It employs high-resolution, multi-spectral remote sensing AI over satellite imagery to monitor crop health at scale. Deployed heavily across sugar mills, corporate farms, and lending institutions throughout Pakistan and globally, it specializes in actionable spatial detection regarding nutrient deficiencies, pest outbreaks, and yield predictions, driven directly by precision GIS analytics.
+
+BaKhabar Kissan \cite{bakhabarkissan2024} is undoubtedly Pakistan's most prominent holistic agricultural advisory platform. Supported by a robust backend call-center infrastructure and an aggressive telecommunications partnership, the application delivers localized weather parameters, pest warnings, and up-to-date regional market commodity prices. It caters extensively to smallholder farmers seeking daily operational guidance.
+
+\subsubsection{Critical analysis of the research items}
+While the Kisan App \cite{kisanapp2024} is accessible, its feature set is profoundly rudimentary; it severely lacks any advanced machine learning integration for intelligent crop recommendations, and it does not possess price forecasting or financial calculators, rendering it purely informational rather than a true decision support system. Farmdar \cite{farmdar2024} leverages state-of-the-art spatial precision, yet its enterprise focus, B2B product structure, and heavy reliance on extensive land tracts organically alienate the 97\% of farmers confined to holdings under 12.5 acres. Conversely, BaKhabar Kissan \cite{bakhabarkissan2024} addresses smallholders effectively through price reporting, but critically acts only as a diagnostic repository; it fails entirely to forecast incoming price volatility, offers no sophisticated FAO-56 integrated localized irrigation scheduling, and completely omits modular financial planning.
+
+\subsubsection{Relationship to the proposed research work}
+The gap analysis of existing entities inherently cements KisaanMadad's unique technological positioning. While BaKhabar Kissan \cite{bakhabarkissan2024} provides basic prices, KisaanMadad introduces dynamic models predicting future prices \cite{murugesan2022forecasting} previously unavailable at zero cost. Unlike the enterprise-focused Farmdar products \cite{farmdar2024}, KisaanMadad explicitly targets smallholders by replacing cost-prohibitive remote B2B analytics with multi-criteria recommendations and FAO-56 \cite{allen1998crop} frameworks operating natively on mobile. Finally, surpassing the passive information structures of the Kisan App \cite{kisanapp2024}, KisaanMadad is the first architecture to fuse agronomic tools with foundational financial planning resources, closing the loop between ecological farm management and smallholder macroeconomic survival.
+
+\subsubsection{Related applications summary table}
+\begin{table}[ht]
+  \centering
+  \caption{Related applications summary table}
+  \label{tab:related_apps}
+  \begin{tabular}{p{0.15\linewidth} p{0.30\linewidth} p{0.30\linewidth} p{0.15\linewidth}}
+    \toprule
+    \textbf{Application} & \textbf{Features} & \textbf{Relevance to KisaanMadad} & \textbf{Limitations} \\
+    \midrule
+    Kisan App \cite{kisanapp2024} & News, static advice, weather & General template for UI accessibility & No ML, no forecasting, no financial tools \\
+    Farmdar \cite{farmdar2024} & Remote sensing B2B products & Demonstrates success of precision agritech & Expensive, enterprise-focused, not a direct consumer app \\
+    BaKhabar Kissan \cite{bakhabarkissan2024} & Daily prices, pest warnings, call centre & Key competitor in price dissemination & Passive reporting only, no FAO-56 irrigation \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\pagebreak
  
-\chapter{Software Requirement Specifications}
-Describe all modules of requirements and design in clear English text along with the necessary diagram and figures.  Anyone reading your report should be able to reproduce your system/results after reading it. It describes functional requirements, design constraints, and other factors necessary to provide a complete and comprehensive description of the requirements for the software.\\
-For each chapter, provide a paragraph of introduction and at the end, a paragraph of conclusions. Make sure no heading/subheading is blank.  Write text to introduce each section as well. 
-\textcolor{red}{NOTE: This Chapter is optional for Research projects but compulsory for Development projects.}
-\section{List of Features}
-List all important features of your system here.
-\section{Functional Requirements}
-The functional requirements fully describe the external behavior of the system. Identify and list each functionality and give a brief description, along with the user of each functionality.
-\section{Quality Attributes}
+\input{chapter4}
 
-\section{Non-Functional Requirements}
-This section should describe all the non-functional requirements, including reusability, performance (how many maximum users can access it at a time), extensibility, etc.
-\section{Assumptions}
-List down all the assumptions made for the specification.
-\section{Use Cases}
-This section lists use cases or scenarios from the use-case model if they represent some significant, central functionality of the final system, or if they have a large architectural coverage—they exercise many architectural elements, or if they stress or illustrate a specific, delicate point of the architecture.\\
-The table \ref{tab:2.1} provides a simple use case.
-
-
-\begin{table}[!ht]
-\centering
-\caption{ A sample use case is given in the above table. You have to follow this tabular format for use cases. Following is the description of the content required in this section. \textcolor{red}{No separate heading is required or use case tables. Keep them all under a generic use case heading. Also, In the previous version, usecase tables dont have cpation, in this version, we do have. } }
-\label{tab:2.1}
-\begin{tabular}{|lllll|}
-\hline
-\multicolumn{2}{|l|}{\textbf{Name}} &
-  \multicolumn{3}{l|}{Sample Use Case Name Here} \\ \hline
-\multicolumn{2}{|l|}{\textbf{Actors}} &
-  \multicolumn{3}{l|}{Admin, Business Owner, Store Manager} \\ \hline
-\multicolumn{2}{|l|}{\textbf{Summary}} &
-  \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}The user shall provide their email and password on the login form, \\ and after successful verification, redirect the user to the home page.\end{tabular}} \\ \hline
-\multicolumn{2}{|l|}{\textbf{Pre-Conditions}} &
-  \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}The user must be in the database records, either added by any of the\\  authorized users or added manually by a developer.\\ The user must not already be logged in.\end{tabular}} \\ \hline
-\multicolumn{2}{|l|}{\textbf{Post-Conditions}} &
-  \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}The user’s session is successfully established and shall be redirected\\  to the home page.\end{tabular}} \\ \hline
-\multicolumn{2}{|l|}{\textbf{\begin{tabular}[c]{@{}l@{}}Special\\ Requirements\end{tabular}}} &
-  \multicolumn{3}{l|}{None} \\ \hline
-\multicolumn{5}{|c|}{\textbf{Basic Flow}} \\ \hline
-\multicolumn{3}{|c|}{\textbf{Actor Action}} &
-  \multicolumn{2}{c|}{\textbf{System Response}} \\ \hline
-\multicolumn{1}{|l|}{1} &
-  \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}The user opens \\ the login page.\end{tabular}} &
-  \multicolumn{1}{l|}{2} &
-  \begin{tabular}[c]{@{}l@{}}The login page is displayed asking for email and\\  password.\end{tabular} \\ \hline
-\multicolumn{1}{|l|}{2} &
-  \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}The user enters valid\\  email and password.\end{tabular}} &
-  \multicolumn{1}{l|}{4} &
-  \begin{tabular}[c]{@{}l@{}}The system verifies the email and  password, \\ establishes a session for the user and redirects\\  the user to the home page.\end{tabular} \\ \hline
-\multicolumn{5}{|c|}{\textbf{Alternative Flow}} \\ \hline
-\multicolumn{1}{|l|}{3} &
-  \multicolumn{2}{l|}{\begin{tabular}[c]{@{}l@{}}The user enters invalid\\  email or password.\end{tabular}} &
-  \multicolumn{1}{l|}{4-A} &
-  \begin{tabular}[c]{@{}l@{}}The system responds with an error \\ message: Incorrect email or password entered.\end{tabular} \\ \hline
-\end{tabular}
-\end{table}
-
-This section lists use cases or scenarios from the use-case model if they represent some significant, central functionality of the final system, or if they have a large architectural coverage—they exercise many architectural elements or if they stress or illustrate a specific, delicate point of the architecture.\\
-\textbf{Summary:} The description briefly conveys the role and purpose of the use case. A single paragraph will suffice for this description.\\
-\textbf{Basic Flow:} This use case starts when the actor does something. An actor always initiates use cases. The use case describes what the actor does and what the system does in response. It is phrased in the form of a dialog between the actor and the system.\\
-The use case describes what happens inside the system, but not how or why. If information is exchanged, be specific about what is passed back and forth. For example, it is not very illuminating to say that the actor enters customer information. It is better to say the actor enters the customer’s name and address. A Glossary of Terms is often useful to keep the complexity of the use case manageable you may want to define things like customer information there to keep the use case from drowning in details.\\
-Simple alternatives may be presented within the text of the use case. If it only takes a few sentences to describe what happens when there is an alternative, do it directly within the \textbf{Flow of Events} section. If the alternative flow is more complex, use a separate section to describe it. For example, an Alternative Flow subsection explains how to describe more complex alternatives.\\
-A picture is sometimes worth a thousand words, though there is no substitute for clean, clear prose. If it improves clarity, feel free to paste graphical depictions of user interfaces, process flows or other figures into the use case. If a flow chart is useful to present a complex decision process, by all means use it!  Similarly for state-dependent behavior, a state-transition diagram often clarifies the behavior of a system better than pages upon pages of text. Use the right presentation medium for your problem, but be wary of using terminology, notations or figures that your audience may not understand. Remember that your purpose is to clarify, not obscure.\\
-\textbf{First Alternative Flow:} More complex alternatives are described in a separate section, referred to in the Basic Flow subsection of Flow of Events section. Think of the Alternative Flow subsections like alternative behavior each alternative flow represents alternative behavior usually due to exceptions that occur in the main flow. They may be as long as necessary to describe the events associated with the alternative behavior. When an alternative flow ends, the events of the main flow of events are resumed unless otherwise stated.\\
-\textbf{Second Alternative Flow:} There may be, and most likely will be, a number of alternative flows in a use case. Keep each alternative flow separate to improve clarity. Using alternative flows improves the readability of the use case, as well as preventing use cases from being decomposed into hierarchies of use cases. Keep in mind that use cases are just textual descriptions, and their main purpose is to document the behavior of a system in a clear, concise, and understandable way.\\
-\textbf{Special Requirements:} A special requirement is typically a nonfunctional requirement that is specific to a use case, but is not easily or naturally specified in the text of the use case’s event flow. Examples of special requirements include legal and regulatory requirements, application standards, and quality attributes of the system to be built including usability, reliability, performance or supportability requirements. Additionally, other requirements such as operating systems and environments, compatibility requirements, and design constraints should be captured in this section.\\
-\textbf{Pre-Conditions:} A pre-condition of a use case is the state of the system that must be present prior to a use case being performed.\\
-\textbf{Post-Conditions:} A post-condition of a use case is a list of possible states the system can be in immediately after a use case has finished.
-\section{Hardware and Software Requirements}
-List the hardware and software requirements that will be required to develop and deploy the project.
-\subsection{Hardware Requirements}
-\subsection{Software Requirements}
-\section{Graphical User Interface}
-This section should give the GUI dumps of each screen, with reference to the users. The navigation flow of each user is also required, and each GUI should mark the functionality/use case that it covers.
-\section{Database Design (if required; this means if you are using noSQL, you will not provide ER but the other design element and data dictonary should still be there. Explain and elaborate your DB design)}
-\subsection{ER Diagram}
-\subsection{Data Dictionary}
-\section{ Risk Analysis}
-List and explain the risks that may be encountered during the project. For e.g.: technical risks, business risks, etc.
 \chapter{Proposed Approach and Methodology}
 The proposed approach could be a Framework, Heuristic, Algorithm, Protocol, or Mathematical-model.
 For each chapter, provide a paragraph of introduction and in the end a paragraph of conclusions. Not the programming code but the algorithmic and procedural details especially related to the hidden/ backend algorithms that are not covered in the design.\\

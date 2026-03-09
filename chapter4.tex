@@ -1,0 +1,456 @@
+% === CHAPTER 4: SRS ===
+\chapter{Software Requirements Specification}
+
+This chapter outlines the Software Requirements Specification (SRS) for the KisaanMadad integrated mobile decision-support system. It presents the core features, formal functional and non-functional requirements, quality attributes, system constraints, use cases, and database design necessary for deployment in a resource-constrained agricultural environment.
+
+\section{List of Features}
+
+The system provides the following primary features:
+\begin{itemize}
+    \item Probabilistic mandi price forecasting with confidence intervals
+    \item Multi-criteria crop recommendation engine
+    \item FAO-56 compliant irrigation scheduling with NASA POWER integration
+    \item Loan calculator and revenue projection tools
+    \item Expense tracker
+    \item Urdu language interface
+    \item Offline-capable core functionality
+    \item Push notifications for price alerts
+\end{itemize}
+
+\section{Functional Requirements}
+
+\subsection{Price Forecasting Module}
+\begin{enumerate}
+    \item The system \textbf{shall} allow the Farmer to choose a primary crop (wheat, cotton, or rice) and generate a 30-day probabilistic mandi price forecast.
+    \item The system \textbf{shall} retrieve historical daily PAMRA and AMIS records to base its forecasting algorithm outputs.
+    \item The system \textbf{shall} display the corresponding upper and lower confidence intervals alongside the median predicted price chart.
+    \item The system \textbf{shall} trigger push notifications if an anomaly or significant 10\% short-term price jump is detected for the Farmer's subscribed crop.
+\end{enumerate}
+
+\subsection{Crop Recommendation Module}
+\begin{enumerate}
+    \item The system \textbf{shall} accept explicit input parameters from the Farmer including land size, district, and planting season.
+    \item The system \textbf{shall} process these geographic parameters via the NASA POWER API to retrieve historical and real-time localized weather data.
+    \item The system \textbf{shall} evaluate inputs systematically against established FAO crop calendars and aggregate environmental metrics.
+    \item The system \textbf{shall} calculate and output a multi-criteria compatibility score representing the suitability of the top recommended crops.
+\end{enumerate}
+
+\subsection{Irrigation Scheduling Module}
+\begin{enumerate}
+    \item The system \textbf{shall} implement the standard FAO-56 Penman-Monteith method to derive baseline reference evapotranspiration ($ET_0$).
+    \item The system \textbf{shall} parse real-time solar radiation, temperature, and precipitation factors directly from the NASA POWER API payload.
+    \item The system \textbf{shall} apply the designated crop coefficient ($K_c$) dynamically aligned with the Farmer's active crop growth cycle to determine crop evapotranspiration ($ET_c$).
+    \item The system \textbf{shall} generate an actionable irrigation schedule detailing required water volume or watering durations.
+\end{enumerate}
+
+\subsection{Financial Planning Module}
+\begin{enumerate}
+    \item The system \textbf{shall} feature an interactive loan calculator requiring interest rate, principal amount, and total tenure to compute uniform monthly installments.
+    \item The system \textbf{shall} process an expected yield input from the Farmer combined with current mandi trading rates to formulate projected revenue.
+    \item The system \textbf{shall} allow the Farmer to record individual input overheads such as seed, fertilizer, and transport costs into an expense tracker.
+    \item The system \textbf{shall} automatically derive and present a projected gross margin comparing accrued tracking expenses against formulated revenues.
+\end{enumerate}
+
+\subsection{Authentication and User Management}
+\begin{enumerate}
+    \item The system \textbf{shall} allow the Farmer to register a distinct account utilizing their mobile number and standard OTP token confirmation.
+    \item The system \textbf{shall} require the Farmer to populate an initial profile detailing primary farm district and language interface preference.
+    \item The system \textbf{shall} securely store established Farmer profile data locally and synchronize passively to the cloud backend.
+\end{enumerate}
+
+\section{Quality Attributes}
+
+\begin{table}[htbp]
+  \centering
+  \caption{System Quality Attributes}
+  \label{tab:quality_attributes}
+  \begin{tabular}{@{}p{0.2\linewidth} p{0.4\linewidth} p{0.3\linewidth}@{}}
+    \toprule
+    \textbf{Quality Attribute} & \textbf{Description} & \textbf{Relevance to KisaanMadad} \\
+    \midrule
+    Performance & How rapidly the system resolves functions and loads screens. & Critical for acceptable price forecast loading. \\
+    Reliability & Operational continuity free from unexpected errors. & Vital for daily irrigation scheduling reliability. \\
+    Usability & Clarity and operational ease of the user interface. & Requires Urdu, icons, and non-complex structural design. \\
+    Availability & Consistency of application and backend accessibility. & Necessitates offline resilience in rural Punjab. \\
+    Scalability & Capability to expand user bases and data payloads. & Adapts to expanding PAMRA archives and Farmer registrations. \\
+    Maintainability & Ease of subsequent application modification and patching. & Allows systematic swapping of evolving inference models. \\
+    Portability & Environmental independence for multi-device execution. & Achieved utilizing cross-platform mobile frameworks. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Non-Functional Requirements}
+
+\subsection{Performance}
+\begin{itemize}
+    \item The price forecast query execution \textbf{shall} complete and return graphic visuals within 3 seconds maximum on a standard 3G/4G cellular network.
+    \item The application \textbf{shall} present core features using offline local cache instantly under scenarios with zero active connectivity.
+\end{itemize}
+
+\subsection{Usability}
+\begin{itemize}
+    \item The UI \textbf{shall} integrate a fully functional vernacular Urdu framework employing familiar iconography to accommodate low-literacy farmers.
+    \item The application interface \textbf{shall} limit navigational depth, ensuring any singular core feature is accessible within a maximum of 3 taps from the Home Dashboard.
+    \item On-screen visual elements and typefaces \textbf{shall} remain completely legible on conventional 5-inch low-resolution Android display panels.
+\end{itemize}
+
+\subsection{Reliability}
+\begin{itemize}
+    \item The overarching API services layer \textbf{shall} maintain an uptime target of 99.9\% throughout critical regional harvesting months.
+    \item The system \textbf{shall} implement graceful degradation, switching automatically to the Hargreaves protocol utilizing local historical temperatures if NASA POWER API endpoints become unresponsive.
+\end{itemize}
+
+\subsection{Security}
+\begin{itemize}
+    \item The system \textbf{shall} preserve stringent Farmer data privacy policies, collecting zero arbitrary Personally Identifiable Information (PII) without transparent and explicit digital consent.
+    \item All external and internal backend network transmissions \textbf{shall} strictly utilize encrypted TLS implementations by default.
+\end{itemize}
+
+\section{Assumptions}
+
+\begin{enumerate}
+    \item The Farmer possesses internet connectivity initially to accommodate application download and primary agricultural data synchronization.
+    \item The deployment environment consists of low to mid-range Android smartphones running a minimum OS version of Android 8.0.
+    \item Continuous and un-throttled availability of the external NASA POWER API data payloads is granted during query cycles.
+    \item Key government and public sources like PAMRA and AMIS will persistently offer stable historic market pricing for the core commodities in Punjab.
+    \item The Farmer exhibits a baseline level of smartphone operational literacy required to manipulate touchscreen interfaces.
+    \item Data pulled via longitude and latitude coordinate boundaries from NASA matches the respective farm's atmospheric microclimate with minimal deviation.
+\end{enumerate}
+
+\section{Use Cases}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: View Price Forecast}
+  \label{uc:view_forecast}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & View Price Forecast \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Farmer accesses a projected moving price trend for an agricultural commodity. \\
+    \hline
+    \textbf{Pre-Conditions} & Appropriate models are cached; UI is operational. \\
+    \hline
+    \textbf{Post-Conditions} & Forecast graph visually highlights predictions and intervals. \\
+    \hline
+    \textbf{Special Requirements} & The chart visualizes a clear median trend surrounded by intervals. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Selects desired crop icon & 2. Prompts ML model for predictive matrices \\
+    & 3. Plots timeline chart and upper/lower arrays \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{2a. If local time-series data is stale, the app pushes an alert guiding the user to connect and refresh the cached history prior to execution.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: Get Crop Recommendation}
+  \label{uc:get_crop_rec}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & Get Crop Recommendation \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Input localized metrics to receive ranked crop suggestions. \\
+    \hline
+    \textbf{Pre-Conditions} & The device possesses network authority to fetch NASA POWER parameters. \\
+    \hline
+    \textbf{Post-Conditions} & Screen enumerates recommended crops by descending score. \\
+    \hline
+    \textbf{Special Requirements} & Employs FAO crop calendars internally. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Inputs land acres and regional district & 2. Gathers constraints and invokes scoring mechanism \\
+    & 3. Returns the formulated and ranked list to the display \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{2a. If explicit geographical location polling fails, the UI requests manual district confirmation before proceeding.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: Generate Irrigation Schedule}
+  \label{uc:get_irrigation}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & Generate Irrigation Schedule \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Determine temporal watering cycles via FAO-56. \\
+    \hline
+    \textbf{Pre-Conditions} & Farmer specifies identical active crop phase and planting baseline. \\
+    \hline
+    \textbf{Post-Conditions} & System delivers specific watering periods or volume suggestions. \\
+    \hline
+    \textbf{Special Requirements} & Real-time precision of evapotranspiration calculations. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Taps on Irrigation module & 2. Validates crop and parses NASA POWER weather objects \\
+    3. Confirms operation & 4. Resolves Penman-Monteith equation and produces the calendar \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{4a. Unreachable NASA endpoints systematically divert calculation pathways to utilize local historical extrema variables against the Hargreaves method.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: Calculate Loan / Revenue Projection}
+  \label{uc:finance_tools}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & Calculate Loan / Revenue Projection \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Assess future revenue potentials or amortized banking loan structures. \\
+    \hline
+    \textbf{Pre-Conditions} & Up-to-date mandi prices are downloaded within the local state space. \\
+    \hline
+    \textbf{Post-Conditions} & Mathematical integers translate to presented financial layouts. \\
+    \hline
+    \textbf{Special Requirements} & The interface reflects numeric integers efficiently and cleanly. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Accesses Financial tools pane & 2. Presents dual isolated modes \\
+    3. Triggers Revenue slider element & 4. Multiplies expected yield by mandi constants live \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{3a. If the Farmer interacts with the Loan array, the module requests Principal, Interest rate constraints to formulate the cyclic installment value instantly.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: Set Up Farmer Profile}
+  \label{uc:setup_profile}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & Set Up Farmer Profile \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Initializing the application state parameters corresponding to user specifics. \\
+    \hline
+    \textbf{Pre-Conditions} & The primary OTP handshake sequence has concluded. \\
+    \hline
+    \textbf{Post-Conditions} & An active profile is structured within standard DB formats. \\
+    \hline
+    \textbf{Special Requirements} & Non-intrusive collection of PII. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Submits localized preferences & 2. Translates object states to persistent localized caching \\
+    & 3. Synchronizes background sequence to corresponding remote records \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{3a. Application is entirely offline; local states update identically and cloud push cycles are suspended pending affirmative connectivity pulses.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Use Case: Switch Language to Urdu}
+  \label{uc:switch_urdu}
+  \begin{tabular}{|p{0.3\linewidth}|p{0.65\linewidth}|}
+    \hline
+    \textbf{Name} & Switch Language to Urdu \\
+    \hline
+    \textbf{Actors} & Farmer \\
+    \hline
+    \textbf{Summary} & Transitions application terminology formats into native Urdu representations. \\
+    \hline
+    \textbf{Pre-Conditions} & Preloaded typography assets exist inside the host bundle. \\
+    \hline
+    \textbf{Post-Conditions} & Total systematic transition of interface architecture text boundaries. \\
+    \hline
+    \textbf{Special Requirements} & Responsive Right-to-Left (RTL) matrix manipulation logic. \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Basic Flow}} \\
+    \hline
+    \textbf{Actor Action} & \textbf{System Response} \\
+    \hline
+    1. Chooses specific language toggle & 2. Injects configuration flags across rendering states \\
+    & 3. Restarts navigational layout matrix aligned RTL in Urdu \\
+    \hline
+    \multicolumn{2}{|c|}{\textbf{Alternative Flow}} \\
+    \hline
+    \multicolumn{2}{|p{0.95\linewidth}|}{3a. In circumstances lacking explicitly translated keys, the rendering module conservatively inherits standard icon-driven or English fallbacks to prohibit blank rendering zones.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Hardware and Software Requirements}
+
+\subsection{Hardware Requirements}
+Deployment architecture demands an introductory-level low-budget Android smartphone possessing a baseline of 2GB operative RAM and 500MB storage capacity to isolate essential model artifacts and dataset caching. The system anticipates intermittent, yet unavoidable, network communication to synchronize historic elements. The backend service instances operate on server architectures characterized by high-concurrency capability, optimized compute resources, and rapid multi-threaded I/O environments.
+
+\subsection{Software Requirements}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Software Component and Technology Justification}
+  \label{tab:sw_requirements}
+  \begin{tabular}{@{}p{0.25\linewidth} p{0.25\linewidth} p{0.45\linewidth}@{}}
+    \toprule
+    \textbf{Component} & \textbf{Technology Choice} & \textbf{Justification} \\
+    \midrule
+    Mobile Frontend & Flutter & Employs an efficient cross-platform foundation producing a unified Android/iOS artifact optimally structured for rural settings~\cite{khan2023cross}. \\
+    Backend API & FastAPI (Python) & Asynchronous lightweight Python framework explicitly resolving overhead latency bridging native ML execution environments~\cite{patel2023fastapi}. \\
+    Price Forecasting Model & CNN-LSTM & Deep learning algorithms effectively surpassing traditional methods corresponding to high-volatility agricultural modeling sequences~\cite{habib2021price, ahmed2022lstm}. \\
+    Irrigation Module & FAO-56 + NASA POWER API & Integrating undisputed international standards~\cite{allen1998crop} reinforced by verified reanalysis parameters~\cite{silva2022nasapower}. \\
+    Database & PostgreSQL & Relational rigidity perfectly handling complex indexing essential to aggregate time-series financial information successfully~\cite{singh2021agridb}. \\
+    ML Model Serving & TensorFlow Lite & Condenses complex models to minimal proportions necessary for executing localized offline inferences natively~\cite{patel2023fastapi}. \\
+    Language Support & Flutter i18n + Urdu font & Crucial resolution for surmounting the fundamental adoption barriers characteristic of low-literacy South Asian regions~\cite{raza2021urduui}. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Graphical User Interface}
+
+Initial spatial constraints formulated over the foundational interactive screens intended for the KisaanMadad platform.
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Home Dashboard}
+  \label{fig:wf_home}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Price Forecast Screen}
+  \label{fig:wf_forecast}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Crop Recommendation Screen}
+  \label{fig:wf_croprec}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Irrigation Schedule Screen}
+  \label{fig:wf_irrig}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Financial Tools Screen}
+  \label{fig:wf_finance}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \fbox{\rule{0pt}{5cm}\rule{0.7\linewidth}{0pt}}
+  \caption{Wireframe: Language Settings Screen}
+  \label{fig:wf_language}
+\end{figure}
+
+\section{Database Design}
+
+\subsection{ER Diagram}
+The relational database topography fundamentally establishes \textbf{Farmer} as the core pivot entity directly corresponding to various secondary elements. A singular \textbf{Farmer} entity initiates a one-to-many link resolving downstream active \textbf{Crop} entities. Expanding horizontally, a registered \textbf{Crop} associates directly with daily chronological \textbf{MandiPrice} fluctuations while similarly mapping calculated \textbf{IrrigationSchedule} records. Abstract elements like \textbf{WeatherData} iterate asynchronously. Furthermore, granular financial operations spawn \textbf{LoanRecord} and \textbf{ExpenseRecord} parameters which fold linearly backward in many-to-one aggregation mapping to the original \textbf{Farmer} identifier.
+
+\subsection{Data Dictionary}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Data Dictionary: Farmer Entity}
+  \label{tab:dict_farmer_table}
+  \begin{tabular}{@{}p{0.2\linewidth} p{0.2\linewidth} p{0.25\linewidth} p{0.25\linewidth}@{}}
+    \toprule
+    \textbf{Attribute} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\
+    \midrule
+    farmer\_id & UUID & PRIMARY KEY & Distinct internal account token \\
+    phone\_number & VARCHAR(15) & UNIQUE, NOT NULL & Formatted active MSISDN string \\
+    name & VARCHAR(100) & - & Alphabetical title sequence \\
+    location\_lat & FLOAT & - & GPS geographic latitude parameter \\
+    location\_long & FLOAT & - & GPS geographic longitude parameter \\
+    farm\_size & DECIMAL(5,2) & $> 0$ & Quantitative acreage domain \\
+    pref\_language & VARCHAR(10) & DEFAULT 'UR' & Selected locale (UR/EN) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Data Dictionary: MandiPrice Entity}
+  \label{tab:dict_mandi_table}
+  \begin{tabular}{@{}p{0.2\linewidth} p{0.2\linewidth} p{0.25\linewidth} p{0.25\linewidth}@{}}
+    \toprule
+    \textbf{Attribute} & \textbf{Data Type} & \textbf{Constraints} & \textbf{Description} \\
+    \midrule
+    price\_id & SERIAL & PRIMARY KEY & Index sequential reference \\
+    crop\_name & VARCHAR(50) & NOT NULL & Textual specific commodity \\
+    mandi\_loc & VARCHAR(100) & NOT NULL & Active geographic trading zone \\
+    record\_date & DATE & NOT NULL & Historical archival chronological stamp \\
+    min\_price & DECIMAL(8,2) & - & Lowest formulated boundary mark \\
+    max\_price & DECIMAL(8,2) & - & Highest formulated boundary mark \\
+    avg\_price & DECIMAL(8,2) & NOT NULL & Arithmetic aggregated trading index \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Risk Analysis}
+
+\begin{table}[htbp]
+  \centering
+  \caption{Project Risk Configuration}
+  \label{tab:risk_table}
+  \begin{tabular}{@{}p{0.25\linewidth} p{0.15\linewidth} p{0.1\linewidth} p{0.1\linewidth} p{0.3\linewidth}@{}}
+    \toprule
+    \textbf{Risk} & \textbf{Type} & \textbf{Likelihood} & \textbf{Impact} & \textbf{Mitigation Strategy} \\
+    \midrule
+    NASA POWER API downtime & Technical & Medium & High & Retain fallback methods mirroring the Hargreaves protocol executing independently over cached averages. \\
+    PAMRA data gaps & Data & High & Medium & Design processing mechanisms configured to resolve non-sequential blanks via structural interpolation matrices. \\
+    Low model accuracy on unseen crops & Technical & Low & High & Compartmentalize core forecasting implementations directly prioritizing solely wheat, cotton, and rice structures initially. \\
+    Low-end device performance friction & Technical & Medium & Medium & Aggressively compile Flutter modules utilizing lightweight parameters and substitute heavy inferences onto server tiers where viable. \\
+    Farmer digital literacy resistance & Business & High & High & Maintain rigid conformity enforcing comprehensive visual cues alongside ubiquitous Urdu integration natively. \\
+    Intermittent connectivity loops & Technical & High & High & Develop encompassing asynchronous cache engines isolating application operations from rigid dependency on connection states. \\
+    Data privacy vulnerabilities & Business & Low & Medium & Integrate complete data masking practices ignoring any extraneous data pooling beyond rigid minimal components. \\
+    Project scope creep & Business & Medium & Medium & Solidify and anchor subsequent structural iteration milestones strictly bound by approved specifications in Deliverable 2. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Conclusion}
+
+This chapter delineates the exhaustive software requirements parameterizing the robust functioning algorithms and constraints essential to KisaanMadad's implementation sequence. The detailed compilation clarifies functional expectations mapping into non-functional dependencies alongside preemptive risk assessment contingencies. Collectively encompassing hardware limits and interface accessibility metrics, the framework effectively predicates the impending system architectural design comprehensively addressed natively in Chapter 5.
+% === END CHAPTER 4: SRS ===
