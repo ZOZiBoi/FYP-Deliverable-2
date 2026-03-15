@@ -74,7 +74,7 @@ The system provides the following primary features:
     Availability & Consistency of application and backend accessibility. & Necessitates offline resilience in rural Punjab. \\
     Scalability & Capability to expand user bases and data payloads. & Adapts to expanding PAMRA archives and Farmer registrations. \\
     Maintainability & Ease of subsequent application modification and patching. & Allows systematic swapping of evolving inference models. \\
-    Portability & Environmental independence for multi-device execution. & Achieved utilizing cross-platform mobile frameworks. \\
+    Portability & Environmental independence for multi-device execution. & Achieved through Kotlin Multiplatform shared domain modules while preserving native platform interfaces. \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -326,13 +326,14 @@ Deployment architecture demands an introductory-level low-budget Android smartph
     \toprule
     \textbf{Component} & \textbf{Technology Choice} & \textbf{Justification} \\
     \midrule
-    Mobile Frontend & Flutter & Employs an efficient cross-platform foundation producing a unified Android/iOS artifact optimally structured for rural settings~\cite{khan2023cross}. \\
-    Backend API & FastAPI (Python) & Asynchronous lightweight Python framework explicitly resolving overhead latency bridging native ML execution environments~\cite{patel2023fastapi}. \\
-    Price Forecasting Model & CNN-LSTM & Deep learning algorithms effectively surpassing traditional methods corresponding to high-volatility agricultural modeling sequences~\cite{habib2021price, ahmed2022lstm}. \\
+    Mobile Frontend & Jetpack Compose (Android) & Prioritises a native Android UI for the project's primary deployment target, enabling direct profiling and memory tuning on constrained handsets while avoiding the overhead of a fully shared UI runtime~\cite{khan2019mobilephone,bendinelli2024composeflutter,wahlandt2024composexml}. \\
+    Shared Mobile Logic & Kotlin Multiplatform & Reuses stable non-UI components such as API clients, domain models, validation rules, and cache policies across Android and iOS without sacrificing native user interfaces~\cite{skantz2023kmm}. \\
+    Backend API & FastAPI (Python) & Selected for straightforward asynchronous endpoint development and tight integration with the Python-based machine learning workflow used by the forecasting module. \\
+    Price Forecasting Model & CNN-LSTM & Deep learning architectures are well suited to volatile agricultural time series, while the local market dynamics identified in Pakistan further justify a robust forecasting pipeline for mandi price prediction~\cite{murugesan2022forecasting,habib2021price}. \\
     Irrigation Module & FAO-56 + NASA POWER API & Integrating undisputed international standards~\cite{allen1998crop} reinforced by verified reanalysis parameters~\cite{silva2022nasapower}. \\
-    Database & PostgreSQL & Relational rigidity perfectly handling complex indexing essential to aggregate time-series financial information successfully~\cite{singh2021agridb}. \\
-    ML Model Serving & TensorFlow Lite & Condenses complex models to minimal proportions necessary for executing localized offline inferences natively~\cite{patel2023fastapi}. \\
-    Language Support & Flutter i18n + Urdu font & Crucial resolution for surmounting the fundamental adoption barriers characteristic of low-literacy South Asian regions~\cite{raza2021urduui}. \\
+    Database & PostgreSQL & Provides reliable relational storage for farmer profiles, mandi price histories, irrigation records, and financial entries while supporting structured querying across linked entities. \\
+    ML Model Serving & TensorFlow Lite & Supports compact on-device inference for offline-capable components where model size, latency, and battery consumption must remain bounded on low-end smartphones. \\
+    Language Support & Jetpack Compose localization + Urdu font resources & Supports an Urdu-first interface aligned with the accessibility needs of farmers who rely on mobile phones for agricultural information but may face literacy and usability barriers in text-heavy systems~\cite{khan2019mobilephone,fao2023dss}. \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -441,7 +442,7 @@ The relational database topography fundamentally establishes \textbf{Farmer} as 
     NASA POWER API downtime & Technical & Medium & High & Retain fallback methods mirroring the Hargreaves protocol executing independently over cached averages. \\
     PAMRA data gaps & Data & High & Medium & Design processing mechanisms configured to resolve non-sequential blanks via structural interpolation matrices. \\
     Low model accuracy on unseen crops & Technical & Low & High & Compartmentalize core forecasting implementations directly prioritizing solely wheat, cotton, and rice structures initially. \\
-    Low-end device performance friction & Technical & Medium & Medium & Aggressively compile Flutter modules utilizing lightweight parameters and substitute heavy inferences onto server tiers where viable. \\
+    Low-end device performance friction & Technical & Medium & Medium & Constrain Compose recomposition surfaces, rely on lazy rendering and local caching, and shift heavier ML inference workloads to backend tiers whenever latency budgets allow. \\
     Farmer digital literacy resistance & Business & High & High & Maintain rigid conformity enforcing comprehensive visual cues alongside ubiquitous Urdu integration natively. \\
     Intermittent connectivity loops & Technical & High & High & Develop encompassing asynchronous cache engines isolating application operations from rigid dependency on connection states. \\
     Data privacy vulnerabilities & Business & Low & Medium & Integrate complete data masking practices ignoring any extraneous data pooling beyond rigid minimal components. \\

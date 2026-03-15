@@ -4,7 +4,7 @@
 This chapter details the high-level and low-level architectural design of the KisaanMadad integrated mobile decision-support system. The architectural representations illustrate the structural organization, sub-system interactions, and data flows essential to fulfilling the project's functional and non-functional requirements. By delineating the overarching system architecture alongside the specific domain models and design tactics, this chapter provides the blueprint guiding the technical implementation of the platform.
 
 \section{System Overview}
-The KisaanMadad platform is structured as a robust client-server architecture tailored for resource-constrained environments in Punjab, Pakistan. The frontend constitutes a cross-platform Flutter mobile application designed to accommodate devices with limited processing power. This mobile client interfaces asynchronously with a central backend API powered by FastAPI (Python), which serves as the primary orchestration layer. The backend manages local data persistence through a PostgreSQL relational database and securely brokers external requests to third-party data providers, notably the NASA POWER API for meteorological coordinates and PAMRA/AMIS for localized commodity pricing data. The overarching objective of this architecture is to minimize bandwidth consumption while ensuring high availability of agricultural predictive models on the edge.
+The KisaanMadad platform is structured as a robust client-server architecture tailored for resource-constrained environments in Punjab, Pakistan. The frontend comprises a native Android application built with Jetpack Compose, complemented by Kotlin Multiplatform shared modules that encapsulate domain models, networking contracts, validation rules, and cache policies for eventual iPhone reuse. This Android-first choice reflects the practical deployment emphasis on low-cost handsets and the need for direct platform-level performance tuning, while still preserving a credible cross-platform path for iOS users \cite{khan2019mobilephone,bendinelli2024composeflutter,wahlandt2024composexml,skantz2023kmm}. The mobile client interfaces asynchronously with a central backend API powered by FastAPI (Python), which serves as the primary orchestration layer. The backend manages local data persistence through a PostgreSQL relational database and securely brokers external requests to third-party data providers, notably the NASA POWER API for meteorological coordinates and PAMRA/AMIS for localized commodity pricing data. The overarching objective of this architecture is to minimize bandwidth consumption while ensuring high availability of agricultural predictive models on the edge.
 
 \section{Design Considerations}
 
@@ -33,12 +33,62 @@ The system architecture physically partitions responsibilities into a classic th
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth, keepaspectratio]{Figures/6.1.png}
+  \begin{tikzpicture}[
+      x=1cm,
+      y=1cm,
+      app/.style={
+        rectangle,
+        rounded corners=4pt,
+        draw=blue!70,
+        fill=blue!12,
+        very thick,
+        minimum width=3.9cm,
+        minimum height=2.3cm,
+        align=center
+      },
+      backend/.style={
+        diamond,
+        aspect=1.7,
+        draw=magenta!80!black,
+        fill=magenta!25,
+        very thick,
+        minimum width=2.5cm,
+        minimum height=1.65cm,
+        align=center
+      },
+      flow/.style={
+        ->,
+        thick,
+        >=stealth,
+        shorten >=1pt
+      },
+      label/.style={
+        font=\small,
+        fill=white,
+        inner sep=1.5pt,
+        anchor=base
+      }
+    ]
+    \node[app] (mobile) at (-5.8, 1.6) {\textbf{Jetpack Compose}\\\textbf{Android Client}\\(Urdu UI, Edge Cache)};
+    \node[backend, font=\small] (api) at (0, 1.6) {\textbf{FastAPI}\\\textbf{Backend}\\(ML Engines,\\Orchestration)};
+    \node[app] (db) at (5.8, 1.6) {\textbf{PostgreSQL}\\(User Profiles,\\Historical Prices)};
+    \node[app] (nasa) at (-5.8, -3.2) {\textbf{NASA POWER}\\(Weather Data)};
+    \node[app] (pamra) at (5.8, -3.2) {\textbf{PAMRA / AMIS}\\(Mandi Prices)};
+
+    \draw[flow] (mobile.east) -- node[label, pos=0.62, above=2pt] {REST} (api.west);
+    \draw[flow] (api.east) -- node[label, pos=0.38, above=2pt] {SQL} (db.west);
+
+    \draw[flow] (api.south west) |- (nasa.east);
+    \node[label] at (-1.75, -1.45) {Meteorological / Forecast};
+
+    \draw[flow] (api.south east) |- (pamra.west);
+    \node[label] at (1.55, -1.45) {Prices / Index};
+  \end{tikzpicture}
   \caption{High-Level System Architecture of KisaanMadad.}
   \label{fig:high_level_arch}
 \end{figure}
 
-The diagram conceptually portrays the data transmission cycle. The Flutter application securely requests data parameters via RESTful principles directly to the FastAPI Backend. The server autonomously evaluates whether the request implies retrieving stable Postgres elements or necessitates real-time network interactions scaling to NASA POWER for evapotranspiration mechanics.
+The diagram conceptually portrays the data transmission cycle. The Jetpack Compose Android client securely requests data parameters via RESTful principles directly to the FastAPI backend, while Kotlin Multiplatform shared modules standardize request models, caching rules, and validation logic so that equivalent iPhone workflows can reuse the same non-UI core. The server autonomously evaluates whether the request implies retrieving stable Postgres elements or necessitates real-time network interactions scaling to NASA POWER for evapotranspiration mechanics.
 
 \subsection{Subsystem Architecture}
 The central backend comprises four modular logical nodes reflecting the product scope. 
@@ -80,6 +130,9 @@ The central backend comprises four modular logical nodes reflecting the product 
 
 \subsection{Offline-First Mobile Caching}
 This strategy addresses rural network instability. The mobile client implements an internal SQLite storage layer. Whenever network latency spikes or connections drop, localized mathematical requests naturally revert to the recent cached matrices. The system transparently flags stale data to the user using discreet UI indicators. 
+
+\subsection{Android-First Native UI with Shared Multiplatform Core}
+Because the primary field deployment concerns low-cost Android phones, the presentation layer remains native through Jetpack Compose rather than adopting a fully shared UI runtime. This decision permits direct use of Android profiling tools, fine-grained state management, and targeted memory optimization on constrained devices, thereby reducing performance friction on weaker handsets. To avoid duplicating stable business logic for iPhone users, networking, validation, serialization, and caching components are organized into Kotlin Multiplatform modules that can be consumed by a future native iOS client \cite{bendinelli2024composeflutter,wahlandt2024composexml,skantz2023kmm}.
 
 \subsection{Graceful Degradation for Real-Time Models}
 For the FAO-56 irrigation protocol, real-time meteorological failures risk pausing vital decisions. The architectural strategy strictly delegates computation. If precise NASA solar radiation streams falter, the backend algorithm intercepts the error and routes the process block toward the temperature-limited Hargreaves-Samani equation, structurally guaranteeing an actionable numeric output.
