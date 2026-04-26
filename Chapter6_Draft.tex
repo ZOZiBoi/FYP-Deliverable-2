@@ -4,21 +4,21 @@
 This chapter details the high-level and low-level architectural design of the KisaanMadad integrated mobile decision-support system. The architectural representations illustrate the structural organization, sub-system interactions, and data flows essential to fulfilling the project's functional and non-functional requirements. By delineating the overarching system architecture alongside the specific domain models and design tactics, this chapter provides the blueprint guiding the technical implementation of the platform.
 
 \section{System Overview}
-The KisaanMadad platform is structured as a robust client-server architecture tailored for resource-constrained environments in Punjab, Pakistan. The frontend constitutes a cross-platform Flutter mobile application designed to accommodate devices with limited processing power. This mobile client interfaces asynchronously with a central backend API powered by FastAPI (Python), which serves as the primary orchestration layer. The backend manages local data persistence through a PostgreSQL relational database and securely brokers external requests to third-party data providers, notably the NASA POWER API for meteorological coordinates and PAMRA/AMIS for localized commodity pricing data. The overarching objective of this architecture is to minimize bandwidth consumption while ensuring high availability of agricultural predictive models on the edge.
+The KisaanMadad platform is structured as a robust client-server architecture tailored for resource-constrained environments in Punjab, Pakistan. The frontend constitutes a native Android Jetpack Compose mobile application designed to accommodate devices with limited processing power. This mobile client interfaces asynchronously with a central backend API powered by FastAPI (Python), which serves as the primary orchestration layer. The backend manages local data persistence through a PostgreSQL relational database and securely brokers external requests to third-party data providers, notably the NASA POWER API for meteorological coordinates and PAMRA/AMIS for localized commodity pricing data. The overarching objective of this architecture is to minimize bandwidth consumption while ensuring high availability of agricultural predictive models on the edge.
 
 \section{Design Considerations}
 
 \subsection{Assumptions and Dependencies}
 \begin{itemize}
-    \item \textbf{Connectivity Dependency:} The system assumes that while the farmer might operate in offline states, periodic connectivity is available to synchronize cached mandi datasets and synchronize the local FAO crop tables.
+    \item \textbf{Connectivity Dependency:} The system assumes that while the policymaker might operate in offline states, periodic connectivity is available to synchronize cached mandi datasets and synchronize the local FAO crop tables.
     \item \textbf{External API Stability:} Accurate irrigation modeling is strictly dependent on the continued availability and structural stability of the NASA POWER API endpoints.
-    \item \textbf{Hardware Constraints:} The application design explicitly caters to low-memory Android devices common among smallholder farmers (i.e., devices with $<$ 2GB RAM), necessitating aggressive memory management.
+    \item \textbf{Hardware Constraints:} The application design explicitly caters to low-memory Android devices common among agricultural policymakers (i.e., devices with $<$ 2GB RAM), necessitating aggressive memory management.
 \end{itemize}
 
 \subsection{General Constraints}
 \begin{itemize}
     \item \textbf{Limited Bandwidth:} Network payloads strictly consist of compressed JSON objects avoiding heavy graphical transmissions.
-    \item \textbf{Multilingual Interfaces:} The software constraints require dynamic RTL (Right-to-Left) rendering capabilities to fully support the native Urdu typography cleanly.
+    \item \textbf{Multilingual Interfaces:} The software constraints require dynamic LTR (Left-to-Right) rendering capabilities to fully support the standard English typography cleanly.
     \item \textbf{Machine Learning Limitations:} Edge-based inferences using CNN-LSTM arrays must computationally complete within acceptable timeframes without draining the device's battery capacity.
 \end{itemize}
 
@@ -38,7 +38,7 @@ The system architecture physically partitions responsibilities into a classic th
   \label{fig:high_level_arch}
 \end{figure}
 
-The diagram conceptually portrays the data transmission cycle. The Flutter application securely requests data parameters via RESTful principles directly to the FastAPI Backend. The server autonomously evaluates whether the request implies retrieving stable Postgres elements or necessitates real-time network interactions scaling to NASA POWER for evapotranspiration mechanics.
+The diagram conceptually portrays the data transmission cycle. The Jetpack Compose application securely requests data parameters via RESTful principles directly to the FastAPI Backend. The server autonomously evaluates whether the request implies retrieving stable Postgres elements or necessitates real-time network interactions scaling to NASA POWER for evapotranspiration mechanics.
 
 \subsection{Subsystem Architecture}
 The central backend comprises four modular logical nodes reflecting the product scope. 
@@ -85,7 +85,7 @@ This strategy addresses rural network instability. The mobile client implements 
 For the FAO-56 irrigation protocol, real-time meteorological failures risk pausing vital decisions. The architectural strategy strictly delegates computation. If precise NASA solar radiation streams falter, the backend algorithm intercepts the error and routes the process block toward the temperature-limited Hargreaves-Samani equation, structurally guaranteeing an actionable numeric output.
 
 \section{Domain Model / Class Diagram}
-The structural representation explicitly models the relationships defining the software environment. It clarifies associative multiplicity existing between the primary entity \textit{Farmer} and the underlying operational records.
+The structural representation explicitly models the relationships defining the software environment. It clarifies associative multiplicity existing between the primary entity \textit{Policymaker} and the underlying operational records.
 
 \begin{figure}[htbp]
   \centering
@@ -103,14 +103,14 @@ The structural representation explicitly models the relationships defining the s
       arrow/.style={-{stealth}, thick}
     ]
 
-    % Farmer Class
+    % Policymaker Class
     \node[
         class,
         rectangle split part fill={black!10, white, white}
-    ] (farmer) {
-      \textbf{\hfil Farmer \hfil}
+    ] (policymaker) {
+      \textbf{\hfil Policymaker \hfil}
       \nodepart{two}
-      - farmer\_id : UUID \\
+      - policymaker\_id : UUID \\
       - name : String \\
       - phone : String \\
       - land\_size : Float
@@ -123,7 +123,7 @@ The structural representation explicitly models the relationships defining the s
     \node[
         class,
         rectangle split part fill={black!10, white, white},
-        right=of farmer
+        right=of policymaker
     ] (crop) {
       \textbf{\hfil Crop \hfil}
       \nodepart{two}
@@ -154,7 +154,7 @@ The structural representation explicitly models the relationships defining the s
     \node[
         class,
         rectangle split part fill={black!10, white, white},
-        below=of farmer
+        below=of policymaker
     ] (irrig) {
       \textbf{\hfil IrrigationSchedule \hfil}
       \nodepart{two}
@@ -167,9 +167,9 @@ The structural representation explicitly models the relationships defining the s
     };
 
     % Relationships
-    \draw[arrow] (farmer.east) -- node[above, near start] {1} node[above, near end] {*} (crop.west);
+    \draw[arrow] (policymaker.east) -- node[above, near start] {1} node[above, near end] {*} (crop.west);
     \draw[arrow] (crop.south) -- node[left, near start] {1} node[left, near end] {*} (price.north);
-    \draw[arrow] (farmer.south) -- node[right, near start] {1} node[right, near end] {*} (irrig.north);
+    \draw[arrow] (policymaker.south) -- node[right, near start] {1} node[right, near end] {*} (irrig.north);
 
   \end{tikzpicture}
   \vspace{0.5cm}

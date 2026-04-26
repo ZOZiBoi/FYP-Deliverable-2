@@ -1,0 +1,20 @@
+% === CHAPTER 10: Conclusion and Future Work ===
+\chapter{Conclusion and Future Work}
+
+\section{Conclusion}
+The KisaanMadad project successfully conceptualised, designed, and implemented a comprehensive integrated decision-support system tailored explicitly for agricultural policymakers in Punjab, Pakistan. Moving beyond the fragmented, single-utility applications prevalent in the current digital landscape, this system established a holistic English-first analytical platform.
+
+By incorporating a hybrid CNN-LSTM architecture, the system demonstrated exceptional capability in forecasting highly volatile mandi prices, significantly outperforming traditional statistical models like ARIMA. The integration of a Multi-Criteria Decision Making (MCDM) engine, backed by real-time NASA POWER meteorological data, provided highly accurate, localised crop recommendations. Furthermore, the implementation of the FAO-56 Penman-Monteith standard, coupled with a robust Hargreaves fallback mechanism, ensured continuous and scientifically sound irrigation scheduling despite the absence of localised IoT sensory infrastructure. Finally, the novel inclusion of macroeconomic financial calculators successfully closed the operational loop, allowing policymakers to project regional revenues and track systemic expenses mathematically.
+
+In conclusion, KisaanMadad successfully addresses critical operational bottlenecks in the Pakistani agricultural sector, providing an actionable, data-driven framework that directly contributes to the United Nations Sustainable Development Goals of Zero Hunger (SDG 2) and Industry, Innovation, and Infrastructure (SDG 9).
+
+\section{Future Work}
+While the current implementation achieves its fundamental objectives, several avenues for future enhancement have been identified:
+\begin{itemize}
+    \item \textbf{Expanded Geographic and Crop Scope:} The current models are tuned specifically for wheat, cotton, and rice within Punjab. Future iterations should expand the machine learning training datasets to include minor cash crops and incorporate geographical topologies spanning Sindh and Khyber Pakhtunkhwa.
+    \item \textbf{Satellite Imagery Integration:} To overcome the coarse spatial resolution limitations of the NASA POWER API, future versions could integrate Sentinel-2 multi-spectral satellite imagery. This would enable highly granular precision agriculture analytics directly on the mobile edge.
+    \item \textbf{Language and Accessibility Expansion:} Although the platform is successfully deployed with an English analytical interface for high-level policymakers, future deployment tiers could introduce secondary localized dashboards (e.g., in Sindhi or advanced Urdu) to broaden accessibility for mid-level regional administrators.
+    \item \textbf{Automated Policy Generation:} Developing an advanced generative AI layer capable of digesting the CNN-LSTM and MCDM outputs to draft automated, formatted agricultural policy briefs and regional warnings autonomously.
+\end{itemize}
+
+% === END CHAPTER 10 ===

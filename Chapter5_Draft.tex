@@ -12,21 +12,21 @@ The Price Forecasting module is designated to predict the stochastic nature of l
 The core methodology relies entirely on the extraction of daily wholesale pricing datasets sourced directly from the Punjab Agriculture Marketing Regulatory Authority (PAMRA) and the Agriculture Marketing Information Service (AMIS) spanning the temporal operational window of 2018 to 2023. These time-series datasets encapsulate extreme commodity volatility previously discussed. To prepare the sequences for sequential ingestion, missing entries are interpolated using localized linear imputation to prevent the destruction of temporal continuity. Subsequently, the univariate data is scaled utilizing Min-Max normalization, restricting the continuous values strictly between 0 and 1, ensuring computational stability during the gradient descent optimization phases.
 
 \subsection{CNN-LSTM Architecture}
-The predictive engine employs a hybrid Convolutional Neural Network and Long Short-Term Memory (CNN-LSTM) architecture. This approach, benchmarked against classical ARIMA and Prophet implementations \cite{menculini2021comparing}, serves to capture distinct temporal profiles. The initial one-dimensional Convolutional (1D-CNN) layers isolate localized, short-term spatial pricing anomalies and drastic market shocks intrinsic to the mandi system. The extracted feature maps are subsequently transitioned into the LSTM layers, which are mathematically designed to prevent gradient vanishing and systematically learn extended temporal dependencies over the historical sequences. By processing these dual layers, the final fully connected dense layer outputs a deterministic 30-day forward-looking prediction. Furthermore, utilizing dropout layers and randomized weight initializations, the module computes standard deviations formulating the upper and lower statistical confidence intervals necessary to present an actionable probabilistic range to the farmer.
+The predictive engine employs a hybrid Convolutional Neural Network and Long Short-Term Memory (CNN-LSTM) architecture. This approach, benchmarked against classical ARIMA and Prophet implementations \cite{menculini2021comparing}, serves to capture distinct temporal profiles. The initial one-dimensional Convolutional (1D-CNN) layers isolate localized, short-term spatial pricing anomalies and drastic market shocks intrinsic to the mandi system. The extracted feature maps are subsequently transitioned into the LSTM layers, which are mathematically designed to prevent gradient vanishing and systematically learn extended temporal dependencies over the historical sequences. By processing these dual layers, the final fully connected dense layer outputs a deterministic 30-day forward-looking prediction. Furthermore, utilizing dropout layers and randomized weight initializations, the module computes standard deviations formulating the upper and lower statistical confidence intervals necessary to present an actionable probabilistic range to the policymaker.
 
 \section{Crop Recommendation Methodology}
 
 The Crop Recommendation module employs a Multi-Criteria Decision Making (MCDM) approach to synthesize diverse environmental and temporal factors, mapping optimal agricultural yields tailored to the specific constraints of the target farm acreage.
 
 \subsection{Input Parameters and NASA POWER Integration}
-The procedural algorithm initiates by requesting fundamental parameters from the farmer: land size, active district within Punjab, and intended planting season. Rather than exclusively relying on static historical templates, the module dynamically queries the NASA POWER API utilizing the district's geographical centroid. This query fetches localized meteorological parameters including cumulative precipitation averages, soil temperature thresholds, and solar radiation baselines.
+The procedural algorithm initiates by requesting fundamental parameters from the policymaker: land size, active district within Punjab, and intended planting season. Rather than exclusively relying on static historical templates, the module dynamically queries the NASA POWER API utilizing the district's geographical centroid. This query fetches localized meteorological parameters including cumulative precipitation averages, soil temperature thresholds, and solar radiation baselines.
 
 \subsection{Multi-Criteria Scoring Mechanism}
 The retrieved meteorological inputs are systematically evaluated against absolute growth thresholds delineated by standardized FAO crop calendars. The algorithm assigns weighted compatibility scores ($S_{c}$) for each candidate crop ($c$) based on four primary attributes: thermal suitability ($W_{T}$), precipitation alignment ($W_{P}$), market proximity and expected mandi demand ($W_{M}$), and temporal planting window accuracy ($W_{D}$). The final recommendation integer is computed via an additive aggregation:
 \begin{equation}
     S_{c} = \alpha W_{T} + \beta W_{P} + \gamma W_{M} + \delta W_{D}
 \end{equation}
-where the coefficients $\alpha, \beta, \gamma,$ and $\delta$ represent the relative deterministic weightings isolated during the initial model tuning. Candidate crops are sorted in descending ordinal rank based on $S_{c}$, ensuring that the final output presented to the farmer explicitly reflects the most agronomically resilient and economically viable options for their highly specific microclimate and geographic restraints.
+where the coefficients $\alpha, \beta, \gamma,$ and $\delta$ represent the relative deterministic weightings isolated during the initial model tuning. Candidate crops are sorted in descending ordinal rank based on $S_{c}$, ensuring that the final output presented to the policymaker explicitly reflects the most agronomically resilient and economically viable options for their highly specific microclimate and geographic restraints.
 
 \section{Irrigation Scheduling Methodology}
 
@@ -47,7 +47,7 @@ Recognizing the probability of API packet loss or incomplete NASA dataset render
 This strategy ensures absolute stability for the continuous operation of the mobile device without compromising vital agricultural scheduling.
 
 \subsection{Crop Evapotranspiration ($ET_c$) and Scheduling}
-Subsequently, the system references predefined FAO statistical tables to lock the precise crop coefficient ($K_c$) identical to the active growth stage (initial, development, mid-season, or late season) of the farmer's designated commodity. Actual crop evapotranspiration ($ET_c$) is derived:
+Subsequently, the system references predefined FAO statistical tables to lock the precise crop coefficient ($K_c$) identical to the active growth stage (initial, development, mid-season, or late season) of the policymaker's designated commodity. Actual crop evapotranspiration ($ET_c$) is derived:
 \begin{equation}
     ET_c = K_c \times ET_0
 \end{equation}
@@ -65,11 +65,11 @@ The financial architecture provides a standard cyclic loan calculator assessing 
 where $r$ is mathematically reduced to the fractional monthly rate.
 
 \subsection{Revenue and Profit Projection}
-In parallel, the revenue engine cross-references the latest available PAMRA price indices against the farmer's estimated crop yield ($Y$) to formulate an expected gross revenue timeline. Additionally, it systematically tracks categorical expenses such as seeds, fertilizers, and arthi commission margins ($E_{total}$). Expected net profitability ($N_p$) is subsequently formulated:
+In parallel, the revenue engine cross-references the latest available PAMRA price indices against the estimated regional crop yield ($Y$) to formulate an expected gross revenue timeline. Additionally, it systematically tracks categorical expenses such as seeds, fertilizers, and arthi commission margins ($E_{total}$). Expected net profitability ($N_p$) is subsequently formulated:
 \begin{equation}
     N_p = (\text{Current Mandi Price} \times Y) - E_{total}
 \end{equation}
-This deterministic tracking actively establishes the fiscal stability required for smallholders traditionally excluded from formal planning structures to optimize operational expenditures.
+This deterministic tracking actively establishes the fiscal stability required for macroeconomic planners traditionally excluded from formal planning structures to optimize operational expenditures.
 
 \section{Conclusion}
 

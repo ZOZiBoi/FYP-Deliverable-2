@@ -1,0 +1,65 @@
+% === CHAPTER 7: Implementation and Test Cases ===
+\chapter{Implementation and Test Cases}
+
+This chapter details the software implementation of the KisaanMadad integrated decision-support system, designed specifically for agricultural policymakers in Punjab, Pakistan. It also outlines the test cases executed to ensure the system's reliability, accuracy, and performance in macroeconomic planning scenarios.
+
+\section{Implementation Details}
+
+\subsection{Technology Stack}
+The implementation leverages a modern, scalable technology stack capable of delivering complex analytical insights:
+\begin{itemize}
+    \item \textbf{Frontend:} Jetpack Compose is utilized to construct a responsive, English-language analytical interface that deploys natively on Android devices.
+    \item \textbf{Backend:} A Python-based FastAPI server orchestrates the machine learning inferences and external API requests efficiently.
+    \item \textbf{Database:} PostgreSQL is used for robust relational data persistence, including historical mandi prices and policymaker profiles.
+    \item \textbf{Machine Learning:} TensorFlow and Keras form the foundation of the CNN-LSTM price forecasting architecture.
+\end{itemize}
+
+\subsection{Module Implementation}
+\subsubsection{Price Forecasting Module}
+The price forecasting module was implemented using a hybrid CNN-LSTM network. Historical data from PAMRA and AMIS (2018--2023) was preprocessed, normalized, and fed into 1D-CNN layers to extract localized market volatility features. LSTM layers subsequently processed these features to output 30-day probabilistic forecasts with confidence intervals, empowering policymakers with forward-looking economic data.
+
+\subsubsection{Crop Recommendation Module}
+The crop recommendation engine was developed as a Multi-Criteria Decision Making (MCDM) algorithm. It queries the NASA POWER API using HTTP REST requests to retrieve real-time solar radiation and precipitation metrics. These metrics are mathematically weighted against FAO crop calendars to generate a ranked suitability score for regional crop planning.
+
+\subsubsection{Irrigation Scheduling Module}
+The irrigation module implements the FAO-56 Penman-Monteith standard. The backend calculates the reference evapotranspiration ($ET_0$) dynamically. For edge cases where complete meteorological data is unavailable, a programmatic fallback to the Hargreaves equation was successfully implemented, ensuring continuous operational stability.
+
+\section{Test Cases}
+
+To validate the structural integrity and predictive accuracy of KisaanMadad, a comprehensive suite of test cases was executed.
+
+\subsection{Unit Testing}
+Unit tests were designed to isolate and verify the correctness of individual programmatic functions.
+\begin{table}[htbp]
+  \centering
+  \caption{Sample Unit Test Cases}
+  \begin{tabular}{|p{0.1\linewidth}|p{0.3\linewidth}|p{0.3\linewidth}|p{0.15\linewidth}|}
+    \hline
+    \textbf{Test ID} & \textbf{Description} & \textbf{Expected Output} & \textbf{Status} \\
+    \hline
+    UT-01 & Validate NASA POWER API JSON payload parsing for valid coordinates. & Returns normalized dictionary of solar radiation and temperature. & Passed \\
+    \hline
+    UT-02 & Verify Hargreaves fallback execution when humidity parameter is null. & Computes $ET_0$ using only min/max temperature vectors. & Passed \\
+    \hline
+    UT-03 & Test MCDM scoring function with negative precipitation weights. & Raises ValueError exception gracefully. & Passed \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Integration Testing}
+Integration testing verified that the Jetpack Compose frontend accurately communicates with the FastAPI backend and that ML tensors are correctly serialized.
+\begin{table}[htbp]
+  \centering
+  \caption{Sample Integration Test Cases}
+  \begin{tabular}{|p{0.1\linewidth}|p{0.3\linewidth}|p{0.3\linewidth}|p{0.15\linewidth}|}
+    \hline
+    \textbf{Test ID} & \textbf{Description} & \textbf{Expected Output} & \textbf{Status} \\
+    \hline
+    IT-01 & End-to-end price forecast request from mobile UI to CNN-LSTM inference and back. & UI accurately renders a 30-day forecast chart with confidence intervals. & Passed \\
+    \hline
+    IT-02 & User registration data flow from Jetpack Compose client to PostgreSQL database. & Policymaker profile securely inserted into the database with UUID. & Passed \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% === END CHAPTER 7 ===

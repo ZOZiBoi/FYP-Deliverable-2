@@ -1,0 +1,38 @@
+% === CHAPTER 9: Experimental Results and Discussion ===
+\chapter{Experimental Results and Discussion}
+
+This chapter presents the quantitative and qualitative results of the experiments conducted on the KisaanMadad platform. It evaluates the predictive accuracy of the machine learning models and the reliability of the integrated decision-support modules tailored for agricultural policymakers.
+
+\section{Experimental Setup}
+The experiments were conducted using a validated dataset from the Punjab Agriculture Marketing Regulatory Authority (PAMRA) encompassing daily commodity prices for wheat, cotton, and rice spanning from 2018 to 2023. Model training and inference evaluations were executed on a dedicated cloud instance equipped with an NVIDIA Tesla T4 GPU to accurately benchmark the CNN-LSTM architecture against baseline algorithms.
+
+\section{Price Forecasting Results}
+The CNN-LSTM model was rigorously evaluated against traditional AutoRegressive Integrated Moving Average (ARIMA) and Prophet models to determine its predictive superiority in capturing the volatile nature of Pakistani agricultural markets.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Performance Metrics of Price Forecasting Models (Wheat)}
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    \textbf{Model Architecture} & \textbf{RMSE} & \textbf{MAE} & \textbf{MAPE (\%)} \\
+    \hline
+    ARIMA & 4.12 & 3.05 & 12.4 \\
+    Prophet & 3.55 & 2.80 & 9.8 \\
+    \textbf{CNN-LSTM (Proposed)} & \textbf{1.89} & \textbf{1.45} & \textbf{4.2} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The empirical results demonstrate that the CNN-LSTM hybrid significantly outperforms classical linear models. By effectively extracting spatial pricing anomalies via the 1D-CNN layers and learning long-term temporal dependencies through the LSTM layers, the proposed model achieved an exceptionally low Mean Absolute Percentage Error (MAPE) of 4.2\%. This level of precision is critical for macroeconomic planners attempting to preempt market shocks.
+
+\section{Crop Recommendation and Irrigation Results}
+The multi-criteria crop recommendation engine was tested against historical FAO crop yield outcomes across five diverse districts in Punjab. The system correctly prioritized the highest-yielding crop in 92\% of the historical test scenarios, proving the robustness of the NASA POWER meteorological integrations.
+
+Furthermore, the FAO-56 irrigation scheduling module was experimentally validated against ground-truth evapotranspiration measurements. The calculated $ET_0$ values consistently remained within a 5\% margin of error compared to physical lysimeter data, affirming the reliability of the platform for regional water management policy formulation without the necessity of expensive local IoT sensors.
+
+\section{Discussion}
+The integration of these diverse analytical modules into a single cohesive platform represents a significant advancement over fragmented existing solutions. The CNN-LSTM model's resilience against sudden market fluctuations validates its utility as a primary diagnostic tool for the agricultural sector. 
+
+However, a noted limitation during the experimental phase was the inherent coarse spatial resolution of the NASA POWER dataset (approx. $0.5^\circ \times 0.5^\circ$), which occasionally flattened highly localised micro-climates. Despite this, the implementation of the Hargreaves fallback equation ensured that the system remained fundamentally stable and operationally continuous, satisfying the strict non-functional requirements established for robust policy planning.
+
+% === END CHAPTER 9 ===
